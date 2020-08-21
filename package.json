@@ -1,0 +1,20 @@
+{
+  "name": "Team-AbyssiniaSaysITSMYDAM-Server",
+  "version": "1.0.0",
+  "description": "[![Codacy Badge](https://api.codacy.com/project/badge/Grade/c6aabe2c24c941e99350664e2b62fec2)](https://app.codacy.com/gh/BuildForSDGCohort2/Team-AbyssiniaSaysITSMYDAM-Server?utm_source=github.com&utm_medium=referral&utm_content=BuildForSDGCohort2/Team-AbyssiniaSaysITSMYDAM-Server&utm_campaign=Badge_Grade_Settings)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BuildForSDGCohort2/Team-AbyssiniaSaysITSMYDAM-Server.git"
+  },
+  "keywords": [],
+  "author": "Amanuel Ewnetu, Abel, Benyam Seifu, Fiker, Mahlet, Yabsra Abhdurahaman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BuildForSDGCohort2/Team-AbyssiniaSaysITSMYDAM-Server/issues"
+  },
+  "homepage": "https://github.com/BuildForSDGCohort2/Team-AbyssiniaSaysITSMYDAM-Server#readme"
+}
