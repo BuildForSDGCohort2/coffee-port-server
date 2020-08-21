@@ -1,10 +1,10 @@
 // add your dependecy imports here
-const { ApolloServer } = require("apollo-server");
-const gql = require("graphql-tag");
-const mongoose = require("mongoose");
+const { ApolloServer } = require('apollo-server');
+const gql = require('graphql-tag');
+const mongoose = require('mongoose');
 
 // add your relative imports here
-const { MONGO_ATLAS_DB_CONNECTION_STRING } = require("./config");
+const { MONGO_ATLAS_DB_CONNECTION_STRING } = require('./config');
 
 // PORT
 const PORT = process.env.PORT || 5000;
@@ -17,7 +17,7 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    getTestMessage: () => "#ITSMYDAM",
+    getTestMessage: () => '#ITSMYDAM',
   },
 };
 
@@ -31,7 +31,7 @@ mongoose
     useNewUrlParser: true,
   })
   .then(() => {
-    console.log("Mongo db connected!");
+    console.log('Mongo db connected!');
     return server.listen({ port: PORT });
   })
   .then((res) => {
