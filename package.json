@@ -4,7 +4,7 @@
   "description": "[![Codacy Badge](https://api.codacy.com/project/badge/Grade/c6aabe2c24c941e99350664e2b62fec2)](https://app.codacy.com/gh/BuildForSDGCohort2/Team-AbyssiniaSaysITSMYDAM-Server?utm_source=github.com&utm_medium=referral&utm_content=BuildForSDGCohort2/Team-AbyssiniaSaysITSMYDAM-Server&utm_campaign=Badge_Grade_Settings)",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon index"
   },
   "repository": {
     "type": "git",
@@ -16,5 +16,27 @@
   "bugs": {
     "url": "https://github.com/BuildForSDGCohort2/Team-AbyssiniaSaysITSMYDAM-Server/issues"
   },
-  "homepage": "https://github.com/BuildForSDGCohort2/Team-AbyssiniaSaysITSMYDAM-Server#readme"
+  "homepage": "https://github.com/BuildForSDGCohort2/Team-AbyssiniaSaysITSMYDAM-Server#readme",
+  "dependencies": {
+    "apollo-server": "^2.16.1",
+    "graphql": "^15.3.0",
+    "mongoose": "^5.10.0",
+    "prettier": "^2.0.5"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^9.1.2",
+    "@commitlint/config-conventional": "^9.1.2",
+    "eslint": "^7.7.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "husky": "^4.2.5",
+    "nodemon": "^2.0.4"
+  }
 }
