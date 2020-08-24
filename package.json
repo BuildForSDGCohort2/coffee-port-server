@@ -22,6 +22,7 @@
     "apollo-server": "^2.16.1",
     "dotenv": "^8.2.0",
     "graphql": "^15.3.0",
+    "graphql-tag": "^2.11.0",
     "mongoose": "^5.10.0",
     "prettier": "^2.0.5"
   },
@@ -34,10 +35,14 @@
     "@commitlint/cli": "^9.1.2",
     "@commitlint/config-conventional": "^9.1.2",
     "eslint": "^7.7.0",
+    "eslint-config-airbnb": "^18.2.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jsx-a11y": "^6.3.0",
     "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-react": "^7.20.0",
+    "eslint-plugin-react-hooks": "^4.0.0",
     "husky": "^4.2.5",
     "nodemon": "^2.0.4"
   }
