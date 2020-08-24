@@ -20,6 +20,7 @@
   "homepage": "https://github.com/BuildForSDGCohort2/Team-AbyssiniaSaysITSMYDAM-Server#readme",
   "dependencies": {
     "apollo-server": "^2.16.1",
+    "dotenv": "^8.2.0",
     "graphql": "^15.3.0",
     "mongoose": "^5.10.0",
     "prettier": "^2.0.5"

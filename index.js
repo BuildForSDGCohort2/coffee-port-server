@@ -1,10 +1,10 @@
+require('dotenv').config();
 // add your dependecy imports here
 const { ApolloServer } = require('apollo-server');
 const gql = require('graphql-tag');
 const mongoose = require('mongoose');
 
 // add your relative imports here
-const { MONGO_ATLAS_DB_CONNECTION_STRING } = require('./config');
 
 // PORT
 const PORT = process.env.PORT || 5000;
@@ -27,7 +27,7 @@ const server = new ApolloServer({
 });
 
 mongoose
-  .connect(MONGO_ATLAS_DB_CONNECTION_STRING, {
+  .connect(process.env.MONGO_ATLAS_DB_CONNECTION_STRING, {
     useNewUrlParser: true,
   })
   .then(() => {
