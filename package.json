@@ -1,11 +1,11 @@
 {
-  "name": "kdame-gebeya-server",
+  "name": "coffee-port-server",
   "version": "1.0.0",
   "description": "this is server app for kdame-gebeya e-commerce web app",
   "main": "index.js",
   "scripts": {
-    "serve": "node index",
-    "start": "node index"
+    "serve": "node src/index",
+    "start": "node src/index"
   },
   "repository": {
     "type": "git",

@@ -1,9 +1,8 @@
+require('dotenv').config();
 // add your dependecy imports here
 const { ApolloServer } = require('apollo-server');
 const gql = require('graphql-tag');
 const mongoose = require('mongoose');
-
-require('dotenv').config();
 
 // add your relative imports here
 
