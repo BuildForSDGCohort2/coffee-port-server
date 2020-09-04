@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
 
 const createToken = async (user, secret, expiresIn) => {
   try {
@@ -12,13 +11,4 @@ const createToken = async (user, secret, expiresIn) => {
   }
 };
 
-const generatePasswordHash = async function (password) {
-  try {
-    const saltRounds = 10;
-    return await bcrypt.hash(password, saltRounds);
-  } catch (err) {
-    console.log('err');
-  }
-};
-
-module.exports = { createToken, generatePasswordHash };
+module.exports = { createToken };

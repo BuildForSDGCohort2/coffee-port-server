@@ -12,4 +12,11 @@ userSchema.statics.generatePasswordHash = function (password) {
   return bcrypt.hash(password, saltRound);
 };
 
+userSchema.statics.validatePassword = function (
+  userInputPassword,
+  password,
+) {
+  return bcrypt.compare(userInputPassword, password);
+};
+
 module.exports = model('User', userSchema);

@@ -1,6 +1,9 @@
 const { UserInputError } = require('apollo-server');
 
-const { validateSignUpInput } = require('../util/validators');
+const {
+  validateSignUpInput,
+  validateLoginInput,
+} = require('../util/validators');
 const { createToken } = require('../util/helpers');
 
 module.exports = {
@@ -60,6 +63,41 @@ module.exports = {
       } catch (err) {
         throw new Error(err);
       }
+    },
+
+    async signIn(
+      _,
+      { email, password },
+      { models: { User }, secret },
+    ) {
+      // validate login input
+      const { errors, valid } = validateLoginInput(email, password);
+
+      if (!valid) {
+        throw new UserInputError('Errors', { errors });
+      }
+
+      // see if user exists
+      const user = await User.findOne({ email });
+      if (!user) {
+        errors.userNotFound = 'User not found';
+        throw new UserInputError('User not found');
+      }
+
+      // compare password : using static method on User schema
+      const match = await User.validatePassword(
+        password,
+        user.password,
+      );
+
+      if (!match) {
+        errors.general = 'Wrong credentials';
+        throw new UserInputError('Wrong credentials');
+      }
+
+      return {
+        token: createToken(user, secret, '30m'),
+      };
     },
   },
 };
