@@ -1,29 +1,28 @@
-require('dotenv').config();
 // add your dependecy imports here
+require('dotenv').config();
 const { ApolloServer } = require('apollo-server');
-const gql = require('graphql-tag');
 const mongoose = require('mongoose');
+// const express = require('express');
+// const cors = require('cors');
 
 // add your relative imports here
+const schema = require('./schema');
+const resolvers = require('./resolvers');
+const models = require('./models');
+
+// const app = express();
+// app.use(cors());
 
 // PORT
 const PORT = process.env.PORT || 5000;
 
-const typeDefs = gql`
-  type Query {
-    getTestMessage: String!
-  }
-`;
-
-const resolvers = {
-  Query: {
-    getTestMessage: () => '#ITSMYDAM',
-  },
-};
-
 const server = new ApolloServer({
-  typeDefs,
+  typeDefs: schema,
   resolvers,
+  context: {
+    models,
+    secret: process.env.SECRET,
+  },
 });
 
 mongoose
