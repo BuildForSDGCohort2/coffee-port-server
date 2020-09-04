@@ -21,4 +21,4 @@ const generatePasswordHash = async function (password) {
   }
 };
 
-module.exports = { generatePasswordHash, createToken };
+module.exports = { createToken, generatePasswordHash };
