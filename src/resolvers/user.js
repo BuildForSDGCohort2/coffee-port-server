@@ -1,10 +1,12 @@
 const { UserInputError } = require('apollo-server');
+const { combineResolvers } = require('graphql-resolvers');
 
 const {
   validateSignUpInput,
   validateLoginInput,
 } = require('../util/validators');
 const { createToken } = require('../util/helpers');
+const { isAdmin } = require('./authorization.js');
 
 module.exports = {
   Query: {
@@ -21,7 +23,7 @@ module.exports = {
   Mutation: {
     async createUser(
       parent,
-      { userInput: { email, password, confirmPassword } },
+      { userInput: { email, password, role, confirmPassword } },
       { models: { User }, secret },
     ) {
       try {
@@ -54,6 +56,7 @@ module.exports = {
           email,
           password,
           createdAt: new Date().toISOString(),
+          role,
         });
 
         const res = await newUser.save();
@@ -99,5 +102,21 @@ module.exports = {
         token: createToken(user, secret, '30m'),
       };
     },
+
+    deleteUser: combineResolvers(
+      isAdmin,
+      async (parent, { email }, { models: { User } }) => {
+        try {
+          const user = await User.findOne({ email });
+
+          await user.delete();
+
+          return 'user deleted!';
+        } catch (error) {
+          console.log(error);
+          return 'failed to delete user';
+        }
+      },
+    ),
   },
 };

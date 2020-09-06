@@ -5,6 +5,7 @@ const userSchema = new Schema({
   email: String,
   password: String,
   createdAt: String,
+  role: String,
 });
 
 userSchema.statics.generatePasswordHash = function (password) {

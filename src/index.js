@@ -1,7 +1,11 @@
 // add your dependecy imports here
 require('dotenv').config();
-const { ApolloServer } = require('apollo-server');
+const {
+  ApolloServer,
+  AuthenticationError,
+} = require('apollo-server');
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
 // const express = require('express');
 // const cors = require('cors');
 
@@ -16,12 +20,37 @@ const models = require('./models');
 // PORT
 const PORT = process.env.PORT || 5000;
 
+// current authenticated user
+const getCurrentUser = async (req) => {
+  const authHeader = req.headers.authorization;
+
+  if (authHeader) {
+    const token = authHeader.split('Bearer ')[1];
+
+    if (token) {
+      try {
+        const user = await jwt.verify(token, process.env.SECRET);
+        console.log(user);
+        return user;
+      } catch (e) {
+        return null;
+      }
+    }
+    // if token is not in right format
+    throw new Error("Token is not in a format 'Bearer token' ");
+  }
+};
+
 const server = new ApolloServer({
   typeDefs: schema,
   resolvers,
-  context: {
-    models,
-    secret: process.env.SECRET,
+  context: async ({ req }) => {
+    const currentUser = await getCurrentUser(req);
+    return {
+      models,
+      currentUser,
+      secret: process.env.SECRET,
+    };
   },
 });
 

@@ -1,6 +1,4 @@
 const userResolvers = require('./user.js');
-// module.exports = {
-//   Query: { ...userResolvers.Query },
-// };
+const productResolvers = require('./product.js');
 
-module.exports = [userResolvers];
+module.exports = [userResolvers, productResolvers];

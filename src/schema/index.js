@@ -1,6 +1,7 @@
 const { gql } = require('apollo-server-express');
 
 const userSchema = require('./user.js');
+const productSchema = require('./product.js');
 
 const linkSchema = gql`
   type Query {
@@ -16,4 +17,4 @@ const linkSchema = gql`
   }
 `;
 
-module.exports = [linkSchema, userSchema];
+module.exports = [linkSchema, userSchema, productSchema];
