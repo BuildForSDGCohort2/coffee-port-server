@@ -1,28 +1,34 @@
 {
-  "name": "kdame-gebeya-server",
+  "name": "coffee-port-server",
   "version": "1.0.0",
   "description": "this is server app for kdame-gebeya e-commerce web app",
   "main": "index.js",
   "scripts": {
-    "serve": "node index",
-    "start": "node index"
+    "serve": "node src/index",
+    "start": "nodemon src/index.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/BuildForSDGCohort2/Team-AbyssiniaSaysITSMYDAM-Server.git"
+    "url": "git+https://github.com/BuildForSDGCohort2/coffee-port-server.git"
   },
   "keywords": [],
-  "author": "Amanuel Ewnetu, Abel, Benyam Seifu, Fiker, Mahlet, Yabsra Abhdurahaman",
+  "author": "Amanuel Ewnetu, Benyam Seifu, Daniel Araya, Yabsra Abhdurahaman",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/BuildForSDGCohort2/Team-AbyssiniaSaysITSMYDAM-Server/issues"
+    "url": "https://github.com/BuildForSDGCohort2/coffee-port-server/issues"
   },
-  "homepage": "https://github.com/BuildForSDGCohort2/Team-AbyssiniaSaysITSMYDAM-Server#readme",
+  "homepage": "https://github.com/BuildForSDGCohort2/coffee-port-server#readme",
   "dependencies": {
     "apollo-server": "^2.16.1",
+    "apollo-server-express": "^2.17.0",
+    "bcrypt": "^5.0.0",
+    "cors": "^2.8.5",
     "dotenv": "^8.2.0",
+    "express": "^4.17.1",
     "graphql": "^15.3.0",
+    "graphql-resolvers": "^0.4.2",
     "graphql-tag": "^2.11.0",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.10.0",
     "prettier": "^2.0.5"
   },
