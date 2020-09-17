@@ -49,9 +49,17 @@ module.exports = {
           throw new UserInputError('Invalid user input', { errors });
         }
 
-        // make sure email is unique
+        // make sure user is unique
         const user = await User.findOne({ email });
         if (user) {
+          // make sure phone is unique
+          if (user.phoneNumber === phoneNumber) {
+            throw new UserInputError('Email already exists', {
+              errors: {
+                phoneNumber: 'Phone number already exist',
+              },
+            });
+          }
           // email is not unique
           throw new UserInputError('Email already exists', {
             errors: {
@@ -59,29 +67,20 @@ module.exports = {
             },
           });
         }
-        // make sure phone is unique
-        const userPhone = await User.findOne({ phoneNumber });
-        if (userPhone) {
-          // phone is not unique
-          throw new UserInputError('Phone already exists', {
-            errors: {
-              phoneNumber: 'Phone number already exists',
-            },
-          });
-        }
+
         // hash password : use the static method u added on User schema
         // eslint-disable-next-line no-param-reassign
         password = await User.generatePasswordHash(password);
 
         const newUser = new User({
-          firstName,
-          lastName,
           email,
           password,
           createdAt: new Date().toISOString(),
           role,
-          phoneNumber,
           company,
+          firstName,
+          lastName,
+          phoneNumber,
         });
 
         const res = await newUser.save();

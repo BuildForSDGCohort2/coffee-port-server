@@ -52,6 +52,10 @@ const server = new ApolloServer({
       secret: process.env.SECRET,
     };
   },
+  engine: {
+    reportSchema: true,
+    variant: 'current',
+  },
 });
 
 mongoose

@@ -30,8 +30,7 @@ module.exports = {
         } catch (err) {
           console.log(err);
           return {
-            __typename: 'PostProductMutationPayload',
-            code: 'custom code',
+            __typename: 'ProductNotAdded',
             message: 'Sorry failed to post your product',
           };
         }

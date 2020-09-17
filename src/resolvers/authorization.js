@@ -16,7 +16,7 @@ const isProductOwner = async (
 ) => {
   const product = await Product.findById(id);
   // console.log(`product: ${product}`);
-  if (product.userId !== currentUser.id) {
+  if (product.user.id !== currentUser.id) {
     throw new ForbiddenError('Not authenticated as owner');
   }
   return skip;
