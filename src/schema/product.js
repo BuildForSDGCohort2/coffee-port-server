@@ -7,7 +7,7 @@ module.exports = gql`
       product: ProductInput!
       company: CompanyInput!
     ): PostProductResult!
-    deleteProductPost(id: ID!): String!
+    deleteProductPost(id: ID!): DeleteProductPostResult!
   }
   # queries
   extend type Query {
@@ -27,8 +27,16 @@ module.exports = gql`
     group: String
     uniqueName: String
   }
+
+  type DeleteProductPost {
+    message: String!
+  }
+
   #results
   union PostProductResult = Product | ProductNotAddedError
+  union DeleteProductPostResult =
+      DeleteProductPost
+    | DeleteProductPostError
 
   # input types
   input ProductInput {

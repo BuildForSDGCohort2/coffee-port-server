@@ -30,7 +30,7 @@ const getCurrentUser = async (req) => {
     if (token) {
       try {
         const user = await jwt.verify(token, process.env.SECRET);
-        console.log(user);
+        // console.log(user);
         return user;
       } catch (e) {
         return null;

@@ -47,9 +47,16 @@ module.exports = {
           const product = await Product.findById(id);
 
           await product.delete();
-          return 'Deletion successful';
+          return {
+            __typename: 'DeleteProductPost',
+            message: 'Successfuly deleted product',
+          };
         } catch (err) {
-          throw new Error(err);
+          return {
+            __typename: 'DeleteProductPostError',
+            message: 'Failed to delete product',
+            type: `${err}`,
+          };
         }
       },
     ),

@@ -10,4 +10,9 @@ module.exports = gql`
     message: String!
     type: String
   }
+
+  type DeleteProductPostError implements Error {
+    message: String!
+    type: String
+  }
 `;

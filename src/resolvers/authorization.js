@@ -15,9 +15,17 @@ const isProductOwner = async (
   { models: { Product }, currentUser },
 ) => {
   const product = await Product.findById(id);
-  // console.log(`product: ${product}`);
-  if (product.user.id !== currentUser.id) {
-    throw new ForbiddenError('Not authenticated as owner');
+  if (!product) {
+    return {
+      __typename: 'DeleteProductPostError',
+      message: "Product doesn't exist",
+    };
+  }
+  if (product.user.email !== currentUser.email) {
+    return {
+      __typename: 'DeleteProductPostError',
+      message: 'Not authenticated as product owner',
+    };
   }
   return skip;
 };
