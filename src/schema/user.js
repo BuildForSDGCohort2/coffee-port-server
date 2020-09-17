@@ -16,6 +16,7 @@ module.exports = gql`
     id: ID!
     email: String!
     role: String
+    company: Company!
   }
 
   type Token {
