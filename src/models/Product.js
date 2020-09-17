@@ -9,9 +9,9 @@ const productSchema = new Schema({
     uniqueName: { type: String },
   },
   user: {
+    createdAt: String,
     email: String,
     password: String,
-    createdAt: String,
     role: String,
     firstName: String,
     lastName: String,

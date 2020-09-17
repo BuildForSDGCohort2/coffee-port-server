@@ -15,4 +15,14 @@ module.exports = gql`
     message: String!
     type: String
   }
+
+  type GetProductsError implements Error {
+    message: String!
+    type: String
+  }
+
+  type NotAuthenticatedUserError implements Error {
+    message: String!
+    type: String
+  }
 `;

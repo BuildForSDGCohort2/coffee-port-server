@@ -6,7 +6,10 @@ const models = require('../models');
 const isAuthenitcated = (parent, args, { currentUser }) => {
   return currentUser
     ? skip
-    : new ForbiddenError('Not autheticated as  user');
+    : {
+        __typename: 'NotAuthenticatedUserError',
+        message: 'not authenticated as a user',
+      };
 };
 
 const isProductOwner = async (

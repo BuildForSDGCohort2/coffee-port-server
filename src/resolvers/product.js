@@ -11,23 +11,21 @@ module.exports = {
       async (
         parent,
         { product: { productName, uniqueAttributes } },
-        { models: { Product }, currentUser, test },
+        { models: { Product }, currentUser },
       ) => {
         try {
           const newProduct = new Product({
             productName,
             uniqueAttributes,
             user: currentUser,
-            test,
           });
-
+          console.log(currentUser);
           const res = await newProduct.save();
 
           return {
             __typename: 'Product',
             ...res._doc,
             id: res._id,
-            status: tesst,
           };
         } catch (err) {
           return {
@@ -66,9 +64,16 @@ module.exports = {
     async products(parent, args, { models: { Product } }) {
       try {
         const products = await Product.find();
-        return products;
+        return {
+          __typename: 'Products',
+          products,
+        };
       } catch (err) {
-        throw new Error(err);
+        return {
+          __typename: 'GetProductsError',
+          message: 'Unable to get products',
+          type: `${err}`,
+        };
       }
     },
   },

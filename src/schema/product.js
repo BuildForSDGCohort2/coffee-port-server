@@ -11,7 +11,7 @@ module.exports = gql`
   }
   # queries
   extend type Query {
-    products: [Product!]
+    products: ProductsResult
   }
   # custom types
   type Product {
@@ -32,12 +32,20 @@ module.exports = gql`
     message: String!
   }
 
+  type Products {
+    products: [Product!]
+  }
+
   #results
-  union PostProductResult = Product | ProductNotAddedError
+  union PostProductResult =
+      Product
+    | ProductNotAddedError
+    | NotAuthenticatedUserError
   union DeleteProductPostResult =
       DeleteProductPost
     | DeleteProductPostError
-
+    | NotAuthenticatedUserError
+  union ProductsResult = Products | GetProductsError
   # input types
   input ProductInput {
     productName: String!

@@ -20,6 +20,7 @@ module.exports = gql`
     role: String
     company: Company!
     phoneNumber: String!
+    createdAt: String
   }
 
   type Token {
