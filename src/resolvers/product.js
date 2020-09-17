@@ -5,32 +5,35 @@ const {
   isAuthenitcated,
   isProductOwner,
 } = require('./authorization.js');
-const User = require('../models/User.js');
-
 module.exports = {
   Mutation: {
     postProduct: combineResolvers(
       isAuthenitcated,
       async (
         parent,
-        { type, name },
-        { models: { Product }, currentUser },
+        { product: { productName, uniqueAttributes }, company },
+        { models: { Product }, currentUser: { email, role } },
       ) => {
-        // if (!currentUser) {
-        //   throw new ForbiddenError('Not authenticated as User');
-        // }
-        const newProduct = new Product({
-          type,
-          name,
-          userId: currentUser.id,
-        });
+        try {
+          const newProduct = new Product({
+            productName,
+            uniqueAttributes,
+            user: {
+              email,
+              role,
+              company,
+            },
+          });
 
-        const res = await newProduct.save();
+          const res = await newProduct.save();
 
-        return {
-          ...res._doc,
-          id: res._id,
-        };
+          return {
+            ...res._doc,
+            id: res._id,
+          };
+        } catch (err) {
+          console.log(err);
+        }
       },
     ),
 
@@ -48,5 +51,16 @@ module.exports = {
         }
       },
     ),
+  },
+
+  Query: {
+    async products(parent, args, { models: { Product } }) {
+      try {
+        const products = await Product.find();
+        return products;
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
   },
 };
