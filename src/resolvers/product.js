@@ -11,27 +11,29 @@ module.exports = {
       async (
         parent,
         { product: { productName, uniqueAttributes } },
-        { models: { Product }, currentUser },
+        { models: { Product }, currentUser, test },
       ) => {
         try {
           const newProduct = new Product({
             productName,
             uniqueAttributes,
             user: currentUser,
+            test,
           });
 
           const res = await newProduct.save();
-          console.log(res);
+
           return {
+            __typename: 'Product',
             ...res._doc,
             id: res._id,
-            message: 'You have successfully added your product',
+            status: tesst,
           };
         } catch (err) {
-          console.log(err);
           return {
-            __typename: 'ProductNotAdded',
-            message: 'Sorry failed to post your product',
+            __typename: 'ProductNotAddedError',
+            message: 'Unable to add your product.',
+            type: `${err}`,
           };
         }
       },

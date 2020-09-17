@@ -6,7 +6,7 @@ module.exports = gql`
     postProduct(
       product: ProductInput!
       company: CompanyInput!
-    ): Product!
+    ): PostProductResult!
     deleteProductPost(id: ID!): String!
   }
   # queries
