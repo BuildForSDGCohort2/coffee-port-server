@@ -1,6 +1,7 @@
 const { gql } = require('apollo-server-express');
 
 module.exports = gql`
+  # mutations
   extend type Mutation {
     postProduct(
       product: ProductInput!
@@ -8,9 +9,11 @@ module.exports = gql`
     ): Product!
     deleteProductPost(id: ID!): String!
   }
+  # queries
   extend type Query {
     products: [Product!]
   }
+  # custom types
   type Product {
     id: ID!
     user: User!
@@ -24,7 +27,10 @@ module.exports = gql`
     group: String
     uniqueName: String
   }
+  #results
+  union PostProductResult = Product | ProductNotAddedError
 
+  # input types
   input ProductInput {
     productName: String!
     uniqueAttributes: ProductUniqueAttributesInput!

@@ -1,5 +1,8 @@
 module.exports = {
-  service: {
-    name: 'coffee-port-server',
+  client: {
+    service: {
+      name: 'coffee-port-server',
+      url: 'http://localhost:3000/',
+    },
   },
 };

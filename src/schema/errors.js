@@ -5,7 +5,7 @@ module.exports = gql`
     message: String!
   }
 
-  type ProductNotAdded implements Error {
+  type ProductNotAddedError implements Error {
     message: String!
   }
 `;
