@@ -1,4 +1,3 @@
-const { UserInputError, ForbiddenError } = require('apollo-server');
 const { combineResolvers } = require('graphql-resolvers');
 
 const {
@@ -11,28 +10,30 @@ module.exports = {
       isAuthenitcated,
       async (
         parent,
-        { product: { productName, uniqueAttributes }, company },
-        { models: { Product }, currentUser: { email, role } },
+        { product: { productName, uniqueAttributes } },
+        { models: { Product }, currentUser },
       ) => {
         try {
           const newProduct = new Product({
             productName,
             uniqueAttributes,
-            user: {
-              email,
-              role,
-              company,
-            },
+            user: currentUser,
           });
 
           const res = await newProduct.save();
-
+          console.log(res);
           return {
             ...res._doc,
             id: res._id,
+            message: 'You have successfully added your product',
           };
         } catch (err) {
           console.log(err);
+          return {
+            __typename: 'PostProductMutationPayload',
+            code: 'custom code',
+            message: 'Sorry failed to post your product',
+          };
         }
       },
     ),

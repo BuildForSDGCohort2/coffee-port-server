@@ -14,9 +14,12 @@ module.exports = gql`
 
   type User {
     id: ID!
+    firstName: String!
+    lastName: String!
     email: String!
     role: String
     company: Company!
+    phoneNumber: String!
   }
 
   type Token {
@@ -26,7 +29,11 @@ module.exports = gql`
   input SignUpUserInput {
     email: String!
     password: String!
+    firstName: String!
+    lastName: String!
     confirmPassword: String!
     role: String
+    phoneNumber: String!
+    company: CompanyInput!
   }
 `;

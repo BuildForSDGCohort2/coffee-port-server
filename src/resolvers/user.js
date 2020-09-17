@@ -23,7 +23,18 @@ module.exports = {
   Mutation: {
     async createUser(
       parent,
-      { userInput: { email, password, role, confirmPassword } },
+      {
+        userInput: {
+          email,
+          password,
+          role,
+          confirmPassword,
+          phoneNumber,
+          company,
+          firstName,
+          lastName,
+        },
+      },
       { models: { User }, secret },
     ) {
       try {
@@ -48,15 +59,29 @@ module.exports = {
             },
           });
         }
+        // make sure phone is unique
+        const userPhone = await User.findOne({ phoneNumber });
+        if (userPhone) {
+          // phone is not unique
+          throw new UserInputError('Phone already exists', {
+            errors: {
+              phoneNumber: 'Phone number already exists',
+            },
+          });
+        }
         // hash password : use the static method u added on User schema
         // eslint-disable-next-line no-param-reassign
         password = await User.generatePasswordHash(password);
 
         const newUser = new User({
+          firstName,
+          lastName,
           email,
           password,
           createdAt: new Date().toISOString(),
           role,
+          phoneNumber,
+          company,
         });
 
         const res = await newUser.save();

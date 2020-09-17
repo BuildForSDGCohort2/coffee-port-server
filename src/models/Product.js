@@ -10,8 +10,12 @@ const productSchema = new Schema({
   },
   user: {
     email: String,
+    password: String,
+    createdAt: String,
     role: String,
-
+    firstName: String,
+    lastName: String,
+    phoneNumber: String,
     company: {
       websiteUrl: { type: String },
       companyName: { type: String },
@@ -24,6 +28,9 @@ const productSchema = new Schema({
       },
     },
   },
+  code: String,
+  success: Boolean,
+  message: String,
 });
 
 module.exports = model('Product', productSchema);
