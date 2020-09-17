@@ -45,6 +45,7 @@ module.exports = gql`
       DeleteProductPost
     | DeleteProductPostError
     | NotAuthenticatedUserError
+    | ProductOwnerError
   union ProductsResult = Products | GetProductsError
   # input types
   input ProductInput {

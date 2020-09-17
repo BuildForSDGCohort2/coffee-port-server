@@ -25,4 +25,50 @@ module.exports = gql`
     message: String!
     type: String
   }
+
+  type TokenError implements Error {
+    message: String!
+    type: String
+  }
+
+  type UserInputError implements Error {
+    message: String!
+    type: String
+    userErrors: UserInputErrors!
+    valid: Boolean!
+  }
+
+  type UserInputErrors {
+    email: String
+    password: String
+    firstName: String
+    lastName: String
+    confirmPassword: String
+    role: String
+    phoneNumber: String
+
+    websiteUrl: String
+    companyName: String
+    companyEmail: String
+
+    country: String
+    city: String
+    street: String
+    postalCode: String
+  }
+
+  type SignupError implements Error {
+    message: String!
+    type: String
+  }
+
+  type SignInError implements Error {
+    message: String!
+    type: String
+  }
+
+  type ProductOwnerError implements Error {
+    message: String!
+    type: String
+  }
 `;

@@ -29,7 +29,10 @@ const createToken = async (user, secret, expiresIn) => {
       },
     );
   } catch (err) {
-    console.log('err');
+    return {
+      __typename: 'TokenError',
+      message: 'Failed to create token',
+    };
   }
 };
 

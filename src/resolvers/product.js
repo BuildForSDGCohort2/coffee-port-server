@@ -1,15 +1,17 @@
+/* eslint-disable no-underscore-dangle */
 const { combineResolvers } = require('graphql-resolvers');
 
 const {
   isAuthenitcated,
   isProductOwner,
 } = require('./authorization.js');
+
 module.exports = {
   Mutation: {
     postProduct: combineResolvers(
       isAuthenitcated,
       async (
-        parent,
+        _,
         { product: { productName, uniqueAttributes } },
         { models: { Product }, currentUser },
       ) => {
@@ -19,7 +21,7 @@ module.exports = {
             uniqueAttributes,
             user: currentUser,
           });
-          console.log(currentUser);
+
           const res = await newProduct.save();
 
           return {
@@ -40,7 +42,7 @@ module.exports = {
     deleteProductPost: combineResolvers(
       isAuthenitcated,
       isProductOwner,
-      async (parent, { id }, { models: { Product } }) => {
+      async (_, { id }, { models: { Product } }) => {
         try {
           const product = await Product.findById(id);
 
@@ -61,7 +63,7 @@ module.exports = {
   },
 
   Query: {
-    async products(parent, args, { models: { Product } }) {
+    async products(_, __, { models: { Product } }) {
       try {
         const products = await Product.find();
         return {

@@ -1,12 +1,8 @@
-const { UserInputError } = require('apollo-server');
-const { combineResolvers } = require('graphql-resolvers');
-
 const {
   validateSignUpInput,
   validateLoginInput,
 } = require('../util/validators');
 const { createToken } = require('../util/helpers');
-const { isAdmin } = require('./authorization.js');
 
 module.exports = {
   Query: {
@@ -22,7 +18,7 @@ module.exports = {
 
   Mutation: {
     async createUser(
-      parent,
+      _,
       {
         userInput: {
           email,
@@ -38,15 +34,37 @@ module.exports = {
       { models: { User }, secret },
     ) {
       try {
+        const {
+          companyEmail,
+          companyName,
+          websiteUrl,
+          // eslint-disable-next-line object-curly-newline
+          address: { city, street, country, postalCode },
+        } = company;
         // validate user input
-        const { errors, valid } = validateSignUpInput(
+        const { userErrors, valid } = validateSignUpInput(
           password,
           confirmPassword,
           email,
+          firstName,
+          lastName,
+          phoneNumber,
+          companyEmail,
+          companyName,
+          websiteUrl,
+          city,
+          street,
+          country,
+          postalCode,
         );
         // if not valid input
         if (!valid) {
-          throw new UserInputError('Invalid user input', { errors });
+          return {
+            __typename: 'UserInputError',
+            message: 'Invalid user input',
+            userErrors,
+            valid,
+          };
         }
 
         // make sure user is unique
@@ -54,18 +72,20 @@ module.exports = {
         if (user) {
           // make sure phone is unique
           if (user.phoneNumber === phoneNumber) {
-            throw new UserInputError('Email already exists', {
-              errors: {
-                phoneNumber: 'Phone number already exist',
-              },
-            });
+            return {
+              __typename: 'UserInputError',
+              message: 'Phone number already exists',
+              userErrors,
+              valid,
+            };
           }
           // email is not unique
-          throw new UserInputError('Email already exists', {
-            errors: {
-              email: 'Email already exists',
-            },
-          });
+          return {
+            __typename: 'UserInputError',
+            message: 'Email already exists',
+            userErrors,
+            valid,
+          };
         }
 
         // hash password : use the static method u added on User schema
@@ -85,10 +105,15 @@ module.exports = {
 
         const res = await newUser.save();
         return {
+          __typename: 'Token',
           token: createToken(res, secret, '30m'),
         };
       } catch (err) {
-        throw new Error(err);
+        return {
+          __typename: 'SignupError',
+          message: 'Unable to sign up user',
+          type: `${err}`,
+        };
       }
     },
 
@@ -97,50 +122,57 @@ module.exports = {
       { email, password },
       { models: { User }, secret },
     ) {
-      // validate login input
-      const { errors, valid } = validateLoginInput(email, password);
+      try {
+        // validate login input
+        const { userErrors, valid } = validateLoginInput(
+          email,
+          password,
+        );
 
-      if (!valid) {
-        throw new UserInputError('Errors', { errors });
-      }
-
-      // see if user exists
-      const user = await User.findOne({ email });
-      if (!user) {
-        errors.userNotFound = 'User not found';
-        throw new UserInputError('User not found');
-      }
-
-      // compare password : using static method on User schema
-      const match = await User.validatePassword(
-        password,
-        user.password,
-      );
-
-      if (!match) {
-        errors.general = 'Wrong credentials';
-        throw new UserInputError('Wrong credentials');
-      }
-
-      return {
-        token: createToken(user, secret, '30m'),
-      };
-    },
-
-    deleteUser: combineResolvers(
-      isAdmin,
-      async (parent, { email }, { models: { User } }) => {
-        try {
-          const user = await User.findOne({ email });
-
-          await user.delete();
-
-          return 'user deleted!';
-        } catch (error) {
-          console.log(error);
-          return 'failed to delete user';
+        if (!valid) {
+          return {
+            __typename: 'UserInputError',
+            userErrors,
+            valid,
+            message: 'Invalid Input!',
+          };
         }
-      },
-    ),
+
+        // see if user exists
+        const user = await User.findOne({ email });
+        if (!user) {
+          return {
+            __typename: 'SignInError',
+            message: 'User not found',
+            type: 'SignInError',
+          };
+        }
+
+        // compare password : using static method on User schema
+        const match = await User.validatePassword(
+          password,
+          user.password,
+        );
+
+        if (!match) {
+          return {
+            __typename: 'SignInError',
+            message: 'Wrong credentials',
+            type: 'SignInError',
+          };
+        }
+
+        return {
+          __typename: 'Token',
+          token: createToken(user, secret, '30m'),
+        };
+      } catch (err) {
+        return {
+          __typename: 'SignInError',
+          type: `${err}`,
+          message: 'Unable to sign in',
+        };
+      }
+    },
   },
 };
