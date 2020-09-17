@@ -18,7 +18,7 @@ const models = require('./models');
 // app.use(cors());
 
 // PORT
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 
 // current authenticated user
 const getCurrentUser = async (req) => {
@@ -30,6 +30,7 @@ const getCurrentUser = async (req) => {
     if (token) {
       try {
         const user = await jwt.verify(token, process.env.SECRET);
+        // console.log(user);
         return user;
       } catch (e) {
         return null;
@@ -50,6 +51,10 @@ const server = new ApolloServer({
       currentUser,
       secret: process.env.SECRET,
     };
+  },
+  engine: {
+    reportSchema: true,
+    variant: 'current',
   },
 });
 

@@ -1,38 +1,39 @@
-const { UserInputError, ForbiddenError } = require('apollo-server');
 const { combineResolvers } = require('graphql-resolvers');
 
 const {
   isAuthenitcated,
   isProductOwner,
 } = require('./authorization.js');
+
 module.exports = {
   Mutation: {
     postProduct: combineResolvers(
       isAuthenitcated,
       async (
         parent,
-        { product: { productName, uniqueAttributes }, company },
-        { models: { Product }, currentUser: { email, role } },
+        { product: { productName, uniqueAttributes } },
+        { models: { Product }, currentUser },
       ) => {
         try {
           const newProduct = new Product({
             productName,
             uniqueAttributes,
-            user: {
-              email,
-              role,
-              company,
-            },
+            user: currentUser,
           });
 
           const res = await newProduct.save();
 
           return {
+            __typename: 'Product',
             ...res._doc,
             id: res._id,
           };
         } catch (err) {
-          console.log(err);
+          return {
+            __typename: 'ProductNotAddedError',
+            message: 'Unable to add your product.',
+            type: `${err}`,
+          };
         }
       },
     ),
@@ -45,9 +46,16 @@ module.exports = {
           const product = await Product.findById(id);
 
           await product.delete();
-          return 'Deletion successful';
+          return {
+            __typename: 'DeleteProductPost',
+            message: 'Successfuly deleted product',
+          };
         } catch (err) {
-          throw new Error(err);
+          return {
+            __typename: 'DeleteProductPostError',
+            message: 'Failed to delete product',
+            type: `${err}`,
+          };
         }
       },
     ),
@@ -57,9 +65,16 @@ module.exports = {
     async products(parent, args, { models: { Product } }) {
       try {
         const products = await Product.find();
-        return products;
+        return {
+          __typename: 'Products',
+          products,
+        };
       } catch (err) {
-        throw new Error(err);
+        return {
+          __typename: 'GetProductsError',
+          message: 'Unable to get products',
+          type: `${err}`,
+        };
       }
     },
   },

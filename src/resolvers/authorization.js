@@ -6,7 +6,10 @@ const models = require('../models');
 const isAuthenitcated = (parent, args, { currentUser }) => {
   return currentUser
     ? skip
-    : new ForbiddenError('Not autheticated as  user');
+    : {
+        __typename: 'NotAuthenticatedUserError',
+        message: 'not authenticated as a user',
+      };
 };
 
 const isProductOwner = async (
@@ -15,9 +18,17 @@ const isProductOwner = async (
   { models: { Product }, currentUser },
 ) => {
   const product = await Product.findById(id);
-  // console.log(`product: ${product}`);
-  if (product.userId !== currentUser.id) {
-    throw new ForbiddenError('Not authenticated as owner');
+  if (!product) {
+    return {
+      __typename: 'DeleteProductPostError',
+      message: "Product doesn't exist",
+    };
+  }
+  if (product.user.email !== currentUser.email) {
+    return {
+      __typename: 'DeleteProductPostError',
+      message: 'Not authenticated as product owner',
+    };
   }
   return skip;
 };

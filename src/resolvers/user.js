@@ -23,7 +23,18 @@ module.exports = {
   Mutation: {
     async createUser(
       parent,
-      { userInput: { email, password, role, confirmPassword } },
+      {
+        userInput: {
+          email,
+          password,
+          role,
+          confirmPassword,
+          phoneNumber,
+          company,
+          firstName,
+          lastName,
+        },
+      },
       { models: { User }, secret },
     ) {
       try {
@@ -35,19 +46,33 @@ module.exports = {
         );
         // if not valid input
         if (!valid) {
-          throw new UserInputError('Invalid user input', { errors });
+          return {
+            __typename: 'UserInputError',
+            message: 'Invalid user input',
+            errors,
+            valid,
+          };
         }
 
-        // make sure email is unique
+        // make sure user is unique
         const user = await User.findOne({ email });
         if (user) {
+          // make sure phone is unique
+          if (user.phoneNumber === phoneNumber) {
+            return {
+              __typename: 'UserInputError',
+              message: 'Phone number already exists',
+              ...errors,
+            };
+          }
           // email is not unique
-          throw new UserInputError('Email already exists', {
-            errors: {
-              email: 'Email already exists',
-            },
-          });
+          return {
+            __typename: 'UserInputError',
+            message: 'Email already exists',
+            ...errors,
+          };
         }
+
         // hash password : use the static method u added on User schema
         // eslint-disable-next-line no-param-reassign
         password = await User.generatePasswordHash(password);
@@ -57,6 +82,10 @@ module.exports = {
           password,
           createdAt: new Date().toISOString(),
           role,
+          company,
+          firstName,
+          lastName,
+          phoneNumber,
         });
 
         const res = await newUser.save();
@@ -64,7 +93,11 @@ module.exports = {
           token: createToken(res, secret, '30m'),
         };
       } catch (err) {
-        throw new Error(err);
+        return {
+          __typename: 'SignupError',
+          message: 'Unable to sign up user',
+          type: `${err}`,
+        };
       }
     },
 

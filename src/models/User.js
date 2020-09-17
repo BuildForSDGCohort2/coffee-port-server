@@ -6,6 +6,20 @@ const userSchema = new Schema({
   password: String,
   createdAt: String,
   role: String,
+  firstName: String,
+  lastName: String,
+  phoneNumber: String,
+  company: {
+    websiteUrl: { type: String },
+    companyName: { type: String },
+    companyEmail: { type: String },
+    address: {
+      country: { type: String },
+      city: { type: String },
+      street: { type: String },
+      postalCode: { type: String },
+    },
+  },
 });
 
 userSchema.statics.generatePasswordHash = function (password) {
