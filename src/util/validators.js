@@ -70,8 +70,9 @@ module.exports.validateSignUpInput = (
   } else if (password !== confirmPassword) {
     errors.confirmPassword = 'Passwords must match';
   }
-
+  console.log(errors);
   return {
+    __typename: 'UserInputError',
     errors,
     valid: Object.keys(errors).length < 1,
   };

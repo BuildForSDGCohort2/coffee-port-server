@@ -46,7 +46,12 @@ module.exports = {
         );
         // if not valid input
         if (!valid) {
-          throw new UserInputError('Invalid user input', { errors });
+          return {
+            __typename: 'UserInputError',
+            message: 'Invalid user input',
+            errors,
+            valid,
+          };
         }
 
         // make sure user is unique
@@ -54,18 +59,18 @@ module.exports = {
         if (user) {
           // make sure phone is unique
           if (user.phoneNumber === phoneNumber) {
-            throw new UserInputError('Email already exists', {
-              errors: {
-                phoneNumber: 'Phone number already exist',
-              },
-            });
+            return {
+              __typename: 'UserInputError',
+              message: 'Phone number already exists',
+              ...errors,
+            };
           }
           // email is not unique
-          throw new UserInputError('Email already exists', {
-            errors: {
-              email: 'Email already exists',
-            },
-          });
+          return {
+            __typename: 'UserInputError',
+            message: 'Email already exists',
+            ...errors,
+          };
         }
 
         // hash password : use the static method u added on User schema
@@ -88,7 +93,11 @@ module.exports = {
           token: createToken(res, secret, '30m'),
         };
       } catch (err) {
-        throw new Error(err);
+        return {
+          __typename: 'SignupError',
+          message: 'Unable to sign up user',
+          type: `${err}`,
+        };
       }
     },
 

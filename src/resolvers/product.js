@@ -4,6 +4,7 @@ const {
   isAuthenitcated,
   isProductOwner,
 } = require('./authorization.js');
+
 module.exports = {
   Mutation: {
     postProduct: combineResolvers(
@@ -19,7 +20,7 @@ module.exports = {
             uniqueAttributes,
             user: currentUser,
           });
-          console.log(currentUser);
+
           const res = await newProduct.save();
 
           return {
