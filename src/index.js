@@ -1,9 +1,7 @@
+/* eslint-disable no-console */
 // add your dependecy imports here
 require('dotenv').config();
-const {
-  ApolloServer,
-  AuthenticationError,
-} = require('apollo-server');
+const { ApolloServer } = require('apollo-server');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 // const express = require('express');
@@ -14,13 +12,11 @@ const schema = require('./schema');
 const resolvers = require('./resolvers');
 const models = require('./models');
 
-// const app = express();
-// app.use(cors());
-
 // PORT
 const PORT = process.env.PORT || 3000;
 
 // current authenticated user
+// eslint-disable-next-line consistent-return
 const getCurrentUser = async (req) => {
   const authHeader = req.headers.authorization;
 

@@ -1,32 +1,33 @@
+/* eslint-disable implicit-arrow-linebreak */
+/* eslint-disable indent */
+/* eslint-disable no-confusing-arrow */
 const { ForbiddenError } = require('apollo-server');
 const { skip, combineResolvers } = require('graphql-resolvers');
-const models = require('../models');
 
 // check if ther current user is authenticated or not
-const isAuthenitcated = (parent, args, { currentUser }) => {
-  return currentUser
+const isAuthenitcated = (_, __, { currentUser }) =>
+  currentUser
     ? skip
     : {
         __typename: 'NotAuthenticatedUserError',
         message: 'not authenticated as a user',
       };
-};
 
 const isProductOwner = async (
-  parent,
+  _,
   { id },
   { models: { Product }, currentUser },
 ) => {
   const product = await Product.findById(id);
   if (!product) {
     return {
-      __typename: 'DeleteProductPostError',
+      __typename: 'ProductOwnerError',
       message: "Product doesn't exist",
     };
   }
   if (product.user.email !== currentUser.email) {
     return {
-      __typename: 'DeleteProductPostError',
+      __typename: 'ProductOwnerError',
       message: 'Not authenticated as product owner',
     };
   }
@@ -35,10 +36,9 @@ const isProductOwner = async (
 
 const isAdmin = combineResolvers(
   isAuthenitcated,
-  (parent, args, { currentUser: { role } }) => {
-    return role === 'ADMIN'
+  (_, __, { currentUser: { role } }) =>
+    role === 'ADMIN'
       ? skip
-      : new ForbiddenError('Not authorized as admin.');
-  },
+      : new ForbiddenError('Not authorized as admin.'),
 );
 module.exports = { isAuthenitcated, isProductOwner, isAdmin };

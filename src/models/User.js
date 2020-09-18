@@ -1,3 +1,4 @@
+/* eslint-disable func-names */
 const { model, Schema } = require('mongoose');
 const bcrypt = require('bcrypt');
 

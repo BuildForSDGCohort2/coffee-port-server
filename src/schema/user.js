@@ -10,8 +10,7 @@ module.exports = gql`
   # mutations
   extend type Mutation {
     createUser(userInput: SignUpUserInput!): CreateUserResult!
-    signIn(email: String!, password: String!): Token!
-    deleteUser(email: String!): String!
+    signIn(email: String!, password: String!): SignInResult!
   }
 
   # custom types
@@ -36,6 +35,12 @@ module.exports = gql`
     | UserInputError
     | TokenError
     | SignupError
+
+  union SignInResult =
+      Token
+    | UserInputError
+    | SignInError
+    | TokenError
   # inputs
   input SignUpUserInput {
     email: String!
