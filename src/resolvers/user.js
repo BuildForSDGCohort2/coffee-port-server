@@ -6,7 +6,7 @@ const { createToken } = require('../util/helpers');
 
 module.exports = {
   Query: {
-    async users(parent, args, { models: { User } }) {
+    async users(_, __, { models: { User } }) {
       try {
         const users = await User.find();
         return users;
@@ -106,7 +106,7 @@ module.exports = {
         const res = await newUser.save();
         return {
           __typename: 'Token',
-          token: createToken(res, secret, '30m'),
+          token: await createToken(res, secret, '30m'),
         };
       } catch (err) {
         return {
@@ -164,7 +164,7 @@ module.exports = {
 
         return {
           __typename: 'Token',
-          token: createToken(user, secret, '30m'),
+          token: await createToken(user, secret, '30m'),
         };
       } catch (err) {
         return {
