@@ -18,7 +18,10 @@ module.exports = gql`
     id: ID!
     user: User!
     productName: String!
+    productMeasurementUnit: String!
+    productQuantity: Int!
     uniqueAttributes: ProductUniqueAttributes!
+    productPrice: Float!
   }
 
   type ProductUniqueAttributes {
@@ -51,6 +54,9 @@ module.exports = gql`
   input ProductInput {
     productName: String!
     uniqueAttributes: ProductUniqueAttributesInput!
+    productPrice: Float!
+    productMeasurementUnit: String!
+    productQuantity: Int!
   }
 
   input ProductUniqueAttributesInput {

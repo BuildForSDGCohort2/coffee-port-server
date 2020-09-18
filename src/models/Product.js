@@ -2,6 +2,9 @@ const { model, Schema } = require('mongoose');
 
 const productSchema = new Schema({
   productName: String,
+  productPrice: Number,
+  productQuantity: Number,
+  productMeasurementUnit: String,
   uniqueAttributes: {
     geographicalDesignation: { type: String },
     grade: { type: String },

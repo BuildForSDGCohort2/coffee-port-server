@@ -12,12 +12,23 @@ module.exports = {
       isAuthenitcated,
       async (
         _,
-        { product: { productName, uniqueAttributes } },
+        {
+          product: {
+            productName,
+            productPrice,
+            productQuantity,
+            productMeasurementUnit,
+            uniqueAttributes,
+          },
+        },
         { models: { Product }, currentUser },
       ) => {
         try {
           const newProduct = new Product({
             productName,
+            productPrice,
+            productQuantity,
+            productMeasurementUnit,
             uniqueAttributes,
             user: currentUser,
           });
