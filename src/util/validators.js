@@ -45,6 +45,12 @@ module.exports.validateSignUpInput = (
 
   if (companyEmail.trim() === '') {
     errors.companyEmail = 'Company email  must not be empty';
+  } else {
+    const regEx = /^([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})$/;
+    if (!companyEmail.match(regEx)) {
+      errors.companyEmail =
+        'Company email must be a valid email address';
+    }
   }
 
   if (websiteUrl.trim() === '') {
