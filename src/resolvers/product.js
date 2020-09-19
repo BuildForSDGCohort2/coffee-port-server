@@ -71,20 +71,82 @@ module.exports = {
         }
       },
     ),
-  },
 
+    updateProduct: combineResolvers(
+      isAuthenitcated,
+      isProductOwner,
+      async (
+        _,
+        { id, productToBeUpdated },
+        { models: { Product } },
+      ) => {
+        try {
+          const product = await Product.findByIdAndUpdate(
+            id,
+            productToBeUpdated,
+          );
+          return {
+            __typename: 'Product',
+            ...product._doc,
+            id: product._doc._id,
+          };
+        } catch (err) {
+          return {
+            __typename: 'ProductUpdateError',
+            type: `${err}`,
+            message: 'Unable to update product',
+          };
+        }
+      },
+    ),
+  },
   Query: {
-    async products(_, __, { models: { Product } }) {
+    async products(_, { filter }, { models: { Product } }) {
       try {
         const products = await Product.find();
+        if (!filter) {
+          return {
+            __typename: 'Products',
+            products,
+          };
+        }
         return {
           __typename: 'Products',
-          products,
+          products: products.filter((product) => {
+            const productName = product.productName
+              .toLowerCase()
+              .includes(filter);
+            const group = product.uniqueAttributes.group
+              .toLowerCase()
+              .includes(filter);
+            const uniqueName = product.uniqueAttributes.uniqueName
+              .toLowerCase()
+              .includes(filter);
+            return productName || group || uniqueName;
+          }),
         };
       } catch (err) {
         return {
           __typename: 'GetProductsError',
           message: 'Unable to get products',
+          type: `${err}`,
+        };
+      }
+    },
+
+    async product(_, { id }, { models: { Product } }) {
+      try {
+        const product = await Product.findById(id);
+
+        return {
+          __typename: 'Product',
+          ...product._doc,
+          id: product._doc._id,
+        };
+      } catch (err) {
+        return {
+          __typename: 'ProductError',
+          message: 'Unable to get product',
           type: `${err}`,
         };
       }

@@ -14,6 +14,22 @@ module.exports = {
         throw new Error(err);
       }
     },
+    async user(_, { id }, { models: { User } }) {
+      try {
+        const user = await User.findById(id);
+        return {
+          __typename: 'User',
+          ...user._doc,
+          id: user._doc._id,
+        };
+      } catch (err) {
+        return {
+          __typename: 'UserDoesNotExist',
+          message: 'Error getting user',
+          type: `${err}`,
+        };
+      }
+    },
   },
 
   Mutation: {

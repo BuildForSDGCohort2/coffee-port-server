@@ -8,10 +8,16 @@ module.exports = gql`
       company: CompanyInput!
     ): PostProductResult!
     deleteProductPost(id: ID!): DeleteProductPostResult!
+
+    updateProduct(
+      id: ID!
+      productToBeUpdated: updateProductInput!
+    ): UpdateProductResult!
   }
   # queries
   extend type Query {
-    products: ProductsResult
+    products(filter: String): ProductsResult
+    product(id: ID!): ProductResult
   }
   # custom types
   type Product {
@@ -49,7 +55,15 @@ module.exports = gql`
     | DeleteProductPostError
     | NotAuthenticatedUserError
     | ProductOwnerError
+
   union ProductsResult = Products | GetProductsError
+  union ProductResult = Product | ProductError
+  union UpdateProductResult =
+      Product
+    | UpdateProductError
+    | ProductOwnerError
+    | NotAuthenticatedUserError
+
   # input types
   input ProductInput {
     productName: String!
@@ -64,5 +78,13 @@ module.exports = gql`
     grade: String
     group: String
     uniqueName: String
+  }
+
+  input updateProductInput {
+    productName: String
+    productMeasurementUnit: String
+    productQuantity: Int
+    productPrice: Float
+    uniqueAttributes: ProductUniqueAttributesInput
   }
 `;

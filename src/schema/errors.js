@@ -71,4 +71,19 @@ module.exports = gql`
     message: String!
     type: String
   }
+
+  type ProductError implements Error {
+    message: String!
+    type: String
+  }
+
+  type UpdateProductError implements Error {
+    message: String!
+    type: String
+  }
+
+  type UserDoesNotExist implements Error {
+    message: String!
+    type: String
+  }
 `;
