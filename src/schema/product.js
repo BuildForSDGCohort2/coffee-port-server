@@ -18,7 +18,10 @@ module.exports = gql`
     id: ID!
     user: User!
     productName: String!
+    productMeasurementUnit: String!
+    productQuantity: Int!
     uniqueAttributes: ProductUniqueAttributes!
+    productPrice: Float!
   }
 
   type ProductUniqueAttributes {
@@ -45,11 +48,15 @@ module.exports = gql`
       DeleteProductPost
     | DeleteProductPostError
     | NotAuthenticatedUserError
+    | ProductOwnerError
   union ProductsResult = Products | GetProductsError
   # input types
   input ProductInput {
     productName: String!
     uniqueAttributes: ProductUniqueAttributesInput!
+    productPrice: Float!
+    productMeasurementUnit: String!
+    productQuantity: Int!
   }
 
   input ProductUniqueAttributesInput {

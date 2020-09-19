@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 const { combineResolvers } = require('graphql-resolvers');
 
 const {
@@ -10,13 +11,24 @@ module.exports = {
     postProduct: combineResolvers(
       isAuthenitcated,
       async (
-        parent,
-        { product: { productName, uniqueAttributes } },
+        _,
+        {
+          product: {
+            productName,
+            productPrice,
+            productQuantity,
+            productMeasurementUnit,
+            uniqueAttributes,
+          },
+        },
         { models: { Product }, currentUser },
       ) => {
         try {
           const newProduct = new Product({
             productName,
+            productPrice,
+            productQuantity,
+            productMeasurementUnit,
             uniqueAttributes,
             user: currentUser,
           });
@@ -41,7 +53,7 @@ module.exports = {
     deleteProductPost: combineResolvers(
       isAuthenitcated,
       isProductOwner,
-      async (parent, { id }, { models: { Product } }) => {
+      async (_, { id }, { models: { Product } }) => {
         try {
           const product = await Product.findById(id);
 
@@ -62,7 +74,7 @@ module.exports = {
   },
 
   Query: {
-    async products(parent, args, { models: { Product } }) {
+    async products(_, __, { models: { Product } }) {
       try {
         const products = await Product.find();
         return {
