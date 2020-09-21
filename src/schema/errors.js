@@ -20,6 +20,16 @@ module.exports = gql`
     message: String!
     type: String
   }
+  
+  type GetProductError implements Error {
+    message: String!
+    type: String
+  }
+
+  type UpdateProductError implements Error {
+    message: String!
+    type: String
+  }
 
   type NotAuthenticatedUserError implements Error {
     message: String!
