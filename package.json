@@ -6,7 +6,6 @@
   "scripts": {
     "serve": "node src/index",
     "start": "node src/index.js"
-
   },
   "repository": {
     "type": "git",
