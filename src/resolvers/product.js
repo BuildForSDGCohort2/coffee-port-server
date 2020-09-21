@@ -72,6 +72,8 @@ module.exports = {
       },
     ),
     updateProduct: combineResolvers(
+      isAuthenitcated,
+      isProductOwner,
       async (_, { id, productToBeUpdated }, { models: { Product } }) => {
         try {
           const product = await Product.findByIdAndUpdate(id, productToBeUpdated);
