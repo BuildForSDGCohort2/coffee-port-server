@@ -9,7 +9,6 @@ module.exports.validateSignUpInput = (
   companyName,
   websiteUrl,
   city,
-  street,
   country,
   postalCode,
 ) => {
@@ -33,10 +32,6 @@ module.exports.validateSignUpInput = (
 
   if (country.trim() === '') {
     errors.country = 'country must not be empty';
-  }
-
-  if (street.trim() === '') {
-    errors.street = 'street  must not be empty';
   }
 
   if (postalCode.trim() === '') {

@@ -7,12 +7,12 @@ module.exports = gql`
     companyName: String!
     companyEmail: String!
     address: Address!
+    products: [String!]
   }
 
   type Address {
     country: String!
     city: String!
-    street: String!
     postalCode: String
   }
 
@@ -21,12 +21,12 @@ module.exports = gql`
     companyName: String!
     companyEmail: String!
     address: AddressInput!
+    products: [String!]
   }
 
   input AddressInput {
     country: String!
     city: String!
-    street: String!
     postalCode: String
   }
 `;

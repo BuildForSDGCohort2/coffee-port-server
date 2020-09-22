@@ -10,6 +10,8 @@ const userSchema = new Schema({
   firstName: String,
   lastName: String,
   phoneNumber: String,
+  isVerified: Boolean,
+  isSupplier: Boolean,
   company: {
     websiteUrl: { type: String },
     companyName: { type: String },
@@ -17,9 +19,9 @@ const userSchema = new Schema({
     address: {
       country: { type: String },
       city: { type: String },
-      street: { type: String },
       postalCode: { type: String },
     },
+    products: [String],
   },
 });
 

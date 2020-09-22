@@ -41,6 +41,7 @@ module.exports = {
           password,
           role,
           confirmPassword,
+          isSupplier,
           phoneNumber,
           company,
           firstName,
@@ -55,7 +56,7 @@ module.exports = {
           companyName,
           websiteUrl,
           // eslint-disable-next-line object-curly-newline
-          address: { city, street, country, postalCode },
+          address: { city, country, postalCode },
         } = company;
         // validate user input
         const { userErrors, valid } = validateSignUpInput(
@@ -69,7 +70,6 @@ module.exports = {
           companyName,
           websiteUrl,
           city,
-          street,
           country,
           postalCode,
         );
@@ -117,6 +117,8 @@ module.exports = {
           firstName,
           lastName,
           phoneNumber,
+          isSupplier,
+          isVerified: false,
         });
 
         const res = await newUser.save();

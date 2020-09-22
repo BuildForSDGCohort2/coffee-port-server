@@ -3,7 +3,7 @@ const { gql } = require('apollo-server');
 module.exports = gql`
   # queries
   extend type Query {
-    user(id: ID!): User
+    user(id: ID!): UserResult
     users: [User!]
   }
 
@@ -23,6 +23,8 @@ module.exports = gql`
     company: Company!
     phoneNumber: String!
     createdAt: String
+    isVerified: Boolean
+    isSupplier: Boolean!
   }
 
   type Token {
@@ -41,6 +43,8 @@ module.exports = gql`
     | UserInputError
     | SignInError
     | TokenError
+
+  union UserResult = User | UserDoesNotExist
   # inputs
   input SignUpUserInput {
     email: String!
@@ -51,5 +55,6 @@ module.exports = gql`
     role: String
     phoneNumber: String!
     company: CompanyInput!
+    isSupplier: Boolean!
   }
 `;
