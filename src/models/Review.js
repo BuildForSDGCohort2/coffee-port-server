@@ -2,37 +2,18 @@ const { model, Schema } = require('mongoose');
 
 const reviewSchema = new Schema({
   product: {
-    productName: String,
-    productPrice: Number,
-    productQuantity: Number,
-    productMeasurementUnit: String,
-    uniqueAttributes: {
-      geographicalDesignation: { type: String },
-      grade: { type: String },
-      group: { type: String },
-      uniqueName: { type: String },
+    type: String,
+    product: {
+      type: Schema.Types.ObjectId,
+      ref: 'Product',
+      required: true,
     },
   },
   text: String,
   user: {
-    createdAt: String,
-    email: String,
-    password: String,
-    role: String,
-    firstName: String,
-    lastName: String,
-    phoneNumber: String,
-    company: {
-      websiteUrl: { type: String },
-      companyName: { type: String },
-      companyEmail: { type: String },
-      address: {
-        country: { type: String },
-        city: { type: String },
-        street: { type: String },
-        postalCode: { type: String },
-      },
-    },
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
   },
   code: String,
   success: Boolean,
