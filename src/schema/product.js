@@ -27,7 +27,7 @@ module.exports = gql`
     productQuantity: Int!
     uniqueAttributes: ProductUniqueAttributes!
     productPrice: Float!
-    reviews: [Review!]!
+    review: [Review!]
   }
 
   type ProductUniqueAttributes {

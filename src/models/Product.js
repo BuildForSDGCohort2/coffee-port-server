@@ -31,6 +31,9 @@ const productSchema = new Schema({
       },
     },
   },
+  review: {
+    text: { type: String },
+  },
   code: String,
   success: Boolean,
   message: String,
