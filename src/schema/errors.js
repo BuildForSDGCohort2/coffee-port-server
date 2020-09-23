@@ -31,6 +31,24 @@ module.exports = gql`
     type: String
   }
 
+  type ProductInputError implements Error {
+    message: String!
+    type: String
+    productErrors: ProductInputErrors!
+    valid: Boolean!
+  }
+
+  type ProductInputErrors {
+    productName: String
+    productMeasurementUnit: String
+    productQuantity: Int
+    productPrice: Float
+    geographicalDesignation: String
+    grade: String
+    group: String
+    uniqueName: String
+  }
+
   type NotAuthenticatedUserError implements Error {
     message: String!
     type: String

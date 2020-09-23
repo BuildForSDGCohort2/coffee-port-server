@@ -59,6 +59,7 @@ module.exports = gql`
   union UpdateProductResult =
       Product
     | UpdateProductError
+    | ProductInputError
     | ProductOwnerError
 
   # input types
