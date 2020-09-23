@@ -16,24 +16,23 @@ module.exports = {
       isAuthenitcated,
       async (
         _,
-        {
-          product: {
-            productName,
-            productPrice,
-            productQuantity,
-            productMeasurementUnit,
-            uniqueAttributes,
-          },
-        },
+        { product },
         { models: { Product }, currentUser },
       ) => {
         try {
+          const { productErrors, valid } = validateProductInput(
+            product,
+          );
+          if (!valid) {
+            return {
+              __typename: 'ProductInputError',
+              message: 'Invalid product input',
+              productErrors,
+              valid,
+            };
+          }
           const newProduct = new Product({
-            productName,
-            productPrice,
-            productQuantity,
-            productMeasurementUnit,
-            uniqueAttributes,
+            ...product,
             user: currentUser,
           });
 
