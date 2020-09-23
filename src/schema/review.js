@@ -4,7 +4,7 @@ module.exports = gql`
   # mutations
   extend type Mutation {
     postReview(
-      review: ReviewInput!
+      review: String!
     ): PostReviewResult!
   }
   # queries
@@ -25,13 +25,13 @@ module.exports = gql`
       Review
     | ReviewNotAddedError
     | NotAuthenticatedUserError
-  union ReviewsResult = Reviews | GetReviewsError
+  union ReviewsResult = Review | GetReviewsError
 
 
   # input types
-  input ReviewInput {
-    product: Product!
-    text: String!
-  }
+  # input ReviewInput {
+  #   product: Product!
+  #   text: String!
+  # }
 
 `;
