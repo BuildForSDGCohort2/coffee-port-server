@@ -6,30 +6,33 @@ const {
   isProductOwner,
 } = require('./authorization.js');
 
+const {
+  validateProductInput,
+} = require('../util/validators');
+
 module.exports = {
   Mutation: {
     postProduct: combineResolvers(
       isAuthenitcated,
       async (
         _,
-        {
-          product: {
-            productName,
-            productPrice,
-            productQuantity,
-            productMeasurementUnit,
-            uniqueAttributes,
-          },
-        },
+        { product },
         { models: { Product }, currentUser },
       ) => {
         try {
+          const { productErrors, valid } = validateProductInput(
+            product,
+          );
+          if (!valid) {
+            return {
+              __typename: 'ProductInputError',
+              message: 'Invalid product input',
+              productErrors,
+              valid,
+            };
+          }
           const newProduct = new Product({
-            productName,
-            productPrice,
-            productQuantity,
-            productMeasurementUnit,
-            uniqueAttributes,
+            ...product,
             user: currentUser,
           });
 
@@ -76,6 +79,17 @@ module.exports = {
       isProductOwner,
       async (_, { id, productToBeUpdated }, { models: { Product } }) => {
         try {
+          const { productErrors, valid } = validateProductInput(
+            productToBeUpdated,
+          );
+          if (!valid) {
+            return {
+              __typename: 'ProductInputError',
+              message: 'Invalid product input',
+              productErrors,
+              valid,
+            };
+          }
           const product = await Product.findByIdAndUpdate(id, productToBeUpdated);
           return {
             __typename: 'Product',

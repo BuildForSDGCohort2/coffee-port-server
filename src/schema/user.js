@@ -41,6 +41,7 @@ module.exports = gql`
     | UserInputError
     | SignInError
     | TokenError
+
   # inputs
   input SignUpUserInput {
     email: String!

@@ -5,7 +5,6 @@ module.exports = gql`
   extend type Mutation {
     postProduct(
       product: ProductInput!
-      company: CompanyInput!
     ): PostProductResult!
     deleteProductPost(id: ID!): DeleteProductPostResult!
     updateProduct(
@@ -48,6 +47,7 @@ module.exports = gql`
   union PostProductResult =
       Product
     | ProductNotAddedError
+    | ProductInputError
     | NotAuthenticatedUserError
   union DeleteProductPostResult =
       DeleteProductPost
@@ -59,6 +59,7 @@ module.exports = gql`
   union UpdateProductResult =
       Product
     | UpdateProductError
+    | ProductInputError
     | ProductOwnerError
 
   # input types

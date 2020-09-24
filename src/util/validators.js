@@ -98,3 +98,46 @@ module.exports.validateLoginInput = (email, password) => {
     valid: Object.keys(userErrors).length < 1,
   };
 };
+
+module.exports.validateProductInput = (product) => {
+  const errors = {};
+
+  if (product.productName && product.productName.trim() === '') {
+    errors.ProductName = 'Product name must not be empty';
+  }
+
+  if (product.productPrice && typeof (product.productPrice) !== 'number') {
+    errors.productPrice = 'Product price must not be empty';
+  }
+
+  if (product.productQuantity && typeof (product.productQuantity) !== 'number') {
+    errors.productQuantity = 'Product quantity must not be empty';
+  }
+
+  if (product.productMeasurementUnit && product.productMeasurementUnit.trim() === '') {
+    errors.productMeasurementUnit = 'Product measurement unit must not be empty';
+  }
+  if (product.uniqueAttributes) {
+    if (product.uniqueAttributes.uniqueName && product.uniqueAttributes.uniqueName.trim() === '') {
+      errors.uniqueName = 'Unique name must not be empty';
+    }
+    if (product.uniqueAttributes.group && product.uniqueAttributes.group.trim() === '') {
+      errors.group = 'Group must not be empty';
+    }
+    if (product.uniqueAttributes.grade) {
+      if (product.uniqueAttributes.grade.trim() === '') {
+        errors.grade = 'Grade must not be empty';
+      }
+    }
+    if (product.uniqueAttributes.geographicalDesignation && product.uniqueAttributes.geographicalDesignation.trim() === '') {
+      errors.geographicalDesignation = 'Geographical Designation must not be empty';
+    }
+  }
+  // console.log(errors);
+  return {
+    __typename: 'ProductInputError',
+    productErrors: errors,
+    type: 'ProductInputError',
+    valid: Object.keys(errors).length < 1,
+  };
+};
