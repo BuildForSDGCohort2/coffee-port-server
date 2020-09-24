@@ -5,14 +5,14 @@
   "main": "index.js",
   "scripts": {
     "serve": "node src/index",
-    "start": "nodemon src/index.js"
+    "start": "node src/index.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/BuildForSDGCohort2/coffee-port-server.git"
   },
   "keywords": [],
-  "author": "Amanuel Ewnetu, Benyam Seifu, Daniel Araya, Yabsra Abhdurahaman",
+  "author": "Amanuel Ewnetu, Benyam Seifu, Daniel Araya, Firi Brehane,  Yabsra Abhdurahaman,",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/BuildForSDGCohort2/coffee-port-server/issues"

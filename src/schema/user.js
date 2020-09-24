@@ -10,6 +10,11 @@ module.exports = gql`
   # mutations
   extend type Mutation {
     createUser(userInput: SignUpUserInput!): CreateUserResult!
+    updateUser(
+      id: ID!
+      updateUserInput: UpdateUserInput!
+    ): UpdatedUserResult!
+    deleteUser(id:ID!):DeleteUserResult!
     signIn(email: String!, password: String!): SignInResult!
   }
 
@@ -27,8 +32,18 @@ module.exports = gql`
     isSupplier: Boolean!
   }
 
+  type UpdatedUser {
+    user: User!
+    token: String!
+  }
+
   type Token {
     token: String!
+  }
+
+  type DeletedUserMessage{
+    message: String!
+    userId: String!
   }
 
   # results
@@ -37,6 +52,18 @@ module.exports = gql`
     | UserInputError
     | TokenError
     | SignupError
+
+  union UpdatedUserResult =
+      UpdatedUser
+    | UserInputError
+    | TokenError
+    | UpdateUserError
+    | NotAuthenticatedUserError
+
+  union DeleteUserResult =
+      DeletedUserMessage
+    | DeleteUserError
+    | NotAuthenticatedUserError
 
   union SignInResult =
       Token
@@ -56,5 +83,16 @@ module.exports = gql`
     phoneNumber: String!
     company: CompanyInput!
     isSupplier: Boolean!
+  }
+
+  input UpdateUserInput {
+    email: String
+    password: String
+    firstName: String
+    lastName: String
+    confirmPassword: String
+    role: String
+    phoneNumber: String
+    company: UpdateCompanyInput
   }
 `;

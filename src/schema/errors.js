@@ -20,6 +20,34 @@ module.exports = gql`
     message: String!
     type: String
   }
+  
+  type GetProductError implements Error {
+    message: String!
+    type: String
+  }
+
+  type UpdateProductError implements Error {
+    message: String!
+    type: String
+  }
+
+  type ProductInputError implements Error {
+    message: String!
+    type: String
+    productErrors: ProductInputErrors!
+    valid: Boolean!
+  }
+
+  type ProductInputErrors {
+    productName: String
+    productMeasurementUnit: String
+    productQuantity: Int
+    productPrice: Float
+    geographicalDesignation: String
+    grade: String
+    group: String
+    uniqueName: String
+  }
 
   type NotAuthenticatedUserError implements Error {
     message: String!
@@ -58,6 +86,16 @@ module.exports = gql`
   }
 
   type SignupError implements Error {
+    message: String!
+    type: String
+  }
+
+  type UpdateUserError implements Error{
+    message: String!
+    type: String
+  }
+
+  type DeleteUserError implements Error {
     message: String!
     type: String
   }

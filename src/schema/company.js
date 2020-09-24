@@ -24,9 +24,23 @@ module.exports = gql`
     products: [String!]
   }
 
+  input UpdateCompanyInput {
+    websiteUrl: String
+    companyName: String
+    companyEmail: String
+    address: UpdateAddressInput
+  }
+
   input AddressInput {
     country: String!
     city: String!
+    postalCode: String
+  }
+
+  input UpdateAddressInput {
+    country: String
+    city: String
+    street: String
     postalCode: String
   }
 `;

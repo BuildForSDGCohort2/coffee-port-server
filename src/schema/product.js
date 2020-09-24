@@ -3,12 +3,8 @@ const { gql } = require('apollo-server-express');
 module.exports = gql`
   # mutations
   extend type Mutation {
-    postProduct(
-      product: ProductInput!
-      company: CompanyInput!
-    ): PostProductResult!
+    postProduct(product: ProductInput!): PostProductResult!
     deleteProductPost(id: ID!): DeleteProductPostResult!
-
     updateProduct(
       id: ID!
       productToBeUpdated: updateProductInput!
@@ -49,6 +45,7 @@ module.exports = gql`
   union PostProductResult =
       Product
     | ProductNotAddedError
+    | ProductInputError
     | NotAuthenticatedUserError
   union DeleteProductPostResult =
       DeleteProductPost
@@ -57,12 +54,12 @@ module.exports = gql`
     | ProductOwnerError
 
   union ProductsResult = Products | GetProductsError
-  union ProductResult = Product | ProductError
+  union ProductResult = Product | GetProductError
   union UpdateProductResult =
       Product
     | UpdateProductError
+    | ProductInputError
     | ProductOwnerError
-    | NotAuthenticatedUserError
 
   # input types
   input ProductInput {
@@ -71,6 +68,13 @@ module.exports = gql`
     productPrice: Float!
     productMeasurementUnit: String!
     productQuantity: Int!
+  }
+  input updateProductInput {
+    productName: String
+    productMeasurementUnit: String
+    productQuantity: Int
+    productPrice: Float
+    uniqueAttributes: ProductUniqueAttributesInput
   }
 
   input ProductUniqueAttributesInput {

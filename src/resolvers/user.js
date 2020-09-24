@@ -1,8 +1,11 @@
+const { combineResolvers } = require('graphql-resolvers');
 const {
   validateSignUpInput,
   validateLoginInput,
+  validateUpdateUserInput,
 } = require('../util/validators');
 const { createToken } = require('../util/helpers');
+const { isAuthenitcated } = require('./authorization');
 
 module.exports = {
   Query: {
@@ -14,6 +17,7 @@ module.exports = {
         throw new Error(err);
       }
     },
+<<<<<<< HEAD
     async user(_, { id }, { models: { User } }) {
       try {
         const user = await User.findById(id);
@@ -30,6 +34,19 @@ module.exports = {
         };
       }
     },
+=======
+    user: combineResolvers(
+      isAuthenitcated,
+      async (_, { id }, { models: { User } }) => {
+        try {
+          const user = await User.findById(id);
+          return user;
+        } catch (err) {
+          throw new Error(err);
+        }
+      },
+    ),
+>>>>>>> develop
   },
 
   Mutation: {
@@ -56,8 +73,13 @@ module.exports = {
           companyName,
           websiteUrl,
           // eslint-disable-next-line object-curly-newline
+<<<<<<< HEAD
           address: { city, country, postalCode },
         } = company;
+=======
+          address: { city, street, country, postalCode },
+        } = company || {};
+>>>>>>> develop
         // validate user input
         const { userErrors, valid } = validateSignUpInput(
           password,
@@ -134,6 +156,88 @@ module.exports = {
         };
       }
     },
+
+    updateUser: combineResolvers(
+      isAuthenitcated,
+      async (
+        _,
+        { id, updateUserInput },
+        { models: { User }, secret },
+      ) => {
+        try {
+          const { userErrors, valid } = validateUpdateUserInput(
+            updateUserInput,
+          );
+
+          if (!valid) {
+            return {
+              __typename: 'UserInputError',
+              message: 'Invalid user input',
+              userErrors,
+              valid,
+            };
+          }
+          const { company, ...args } = updateUserInput;
+          const { address } = company;
+          const updatedUser = await User.findByIdAndUpdate(id, args, {
+            new: true,
+            useFindAndModify: false,
+          });
+
+          if (address !== undefined && address != null) {
+            const addressProperties = Object.entries(address);
+            addressProperties.forEach((addressProperty) => {
+              const propertyName = addressProperty[0];
+              const propertyValue = addressProperty[1];
+              updatedUser.company.address[
+                propertyName
+              ] = propertyValue;
+            });
+          }
+
+          const companyProperties = Object.entries(company);
+          companyProperties.forEach((companyProperty) => {
+            const propertyName = companyProperty[0];
+            const propertyValue = companyProperty[1];
+            if (propertyName !== 'address') {
+              updatedUser.company[propertyName] = propertyValue;
+            }
+          });
+          updatedUser.save();
+          return {
+            __typename: 'UpdatedUser',
+            user: updatedUser,
+            token: await createToken(updatedUser, secret, '300m'),
+          };
+        } catch (err) {
+          return {
+            __typename: 'UpdateUserError',
+            message: 'Unable to update user',
+            type: `${err}`,
+          };
+        }
+      },
+    ),
+
+    deleteUser: combineResolvers(
+      isAuthenitcated,
+      async (_, { id }, { models: { User } }) => {
+        try {
+          await User.deleteOne({ _id: id });
+          return {
+            __typename: 'DeletedUserMessage',
+            message: 'User is successfuly deleted.',
+            userId: id,
+          };
+        } catch (err) {
+          return {
+            __typename: 'DeleteUserError',
+            message: 'Error occured while deleting user.',
+            type: `${err}`,
+          };
+        }
+      },
+    ),
 
     async signIn(
       _,
