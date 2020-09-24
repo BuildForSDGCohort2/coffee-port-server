@@ -14,6 +14,7 @@ module.exports = gql`
       id: ID!
       updateUserInput: UpdateUserInput!
     ): UpdatedUserResult!
+    deleteUser(id:ID!):DeleteUserResult!
     signIn(email: String!, password: String!): SignInResult!
   }
 
@@ -38,6 +39,11 @@ module.exports = gql`
     token: String!
   }
 
+  type DeletedUserMessage{
+    message: String!
+    userId: String!
+  }
+
   # results
   union CreateUserResult =
       Token
@@ -50,6 +56,11 @@ module.exports = gql`
     | UserInputError
     | TokenError
     | UpdateUserError
+    | NotAuthenticatedUserError
+
+  union DeleteUserResult =
+      DeletedUserMessage
+    | DeleteUserError
     | NotAuthenticatedUserError
 
   union SignInResult =

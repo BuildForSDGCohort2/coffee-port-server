@@ -193,6 +193,26 @@ module.exports = {
       },
     ),
 
+    deleteUser: combineResolvers(
+      isAuthenitcated,
+      async (_, { id }, { models: { User } }) => {
+        try {
+          await User.deleteOne({ _id: id });
+          return {
+            __typename: 'DeletedUserMessage',
+            message: 'User is successfuly deleted.',
+            userId: id,
+          };
+        } catch (err) {
+          return {
+            __typename: 'DeleteUserError',
+            message: 'Error occured while deleting user.',
+            type: `${err}`,
+          };
+        }
+      },
+    ),
+
     async signIn(
       _,
       { email, password },
