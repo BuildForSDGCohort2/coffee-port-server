@@ -72,6 +72,11 @@ module.exports = gql`
     type: String
   }
 
+  type UpdateUserError implements Error{
+    message: String!
+    type: String
+  }
+
   type SignInError implements Error {
     message: String!
     type: String

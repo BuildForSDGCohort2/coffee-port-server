@@ -1,8 +1,11 @@
+const { combineResolvers } = require('graphql-resolvers');
 const {
   validateSignUpInput,
   validateLoginInput,
+  validateUpdateUserInput,
 } = require('../util/validators');
 const { createToken } = require('../util/helpers');
+const { isAuthenitcated } = require('./authorization');
 
 module.exports = {
   Query: {
@@ -40,7 +43,7 @@ module.exports = {
           websiteUrl,
           // eslint-disable-next-line object-curly-newline
           address: { city, street, country, postalCode },
-        } = company;
+        } = company || {};
         // validate user input
         const { userErrors, valid } = validateSignUpInput(
           password,
@@ -116,6 +119,60 @@ module.exports = {
         };
       }
     },
+
+    updateUser: combineResolvers(
+      isAuthenitcated,
+      async (
+        _,
+        { id, updateUserInput },
+        { models: { User }, secret },
+      ) => {
+        try {
+          const { userErrors, valid } = validateUpdateUserInput(
+            updateUserInput,
+          );
+
+          if (!valid) {
+            return {
+              __typename: 'UserInputError',
+              message: 'Invalid user input',
+              userErrors,
+              valid,
+            };
+          }
+          const { company, ...args } = updateUserInput;
+          const { address } = company;
+          const updatedUser = await User.findByIdAndUpdate(id, args, {
+            new: true,
+            useFindAndModify: false,
+          });
+          const addressProperties = Object.entries(address);
+          addressProperties.forEach((addressProperty) => {
+            const propertyName = addressProperty[0];
+            const propertyValue = addressProperty[1];
+            updatedUser.company.address[propertyName] = propertyValue;
+          });
+          const companyProperties = Object.entries(company);
+          companyProperties.forEach((companyProperty) => {
+            const propertyName = companyProperty[0];
+            const propertyValue = companyProperty[1];
+            updatedUser.company[propertyName] = propertyValue;
+          });
+          updatedUser.save();
+          return {
+            __typename: 'UpdatedUser',
+            user: updatedUser,
+            token: await createToken(updatedUser, secret, '300m'),
+          };
+        } catch (err) {
+          return {
+            __typename: 'UpdateUserError',
+            message: 'Unable to update user',
+            type: `${err}`,
+          };
+        }
+      },
+    ),
 
     async signIn(
       _,
