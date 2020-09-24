@@ -17,6 +17,17 @@ module.exports = {
         throw new Error(err);
       }
     },
+    user: combineResolvers(
+      isAuthenitcated,
+      async (_, { id }, { models: { User } }) => {
+        try {
+          const user = await User.findById(id);
+          return user;
+        } catch (err) {
+          throw new Error(err);
+        }
+      },
+    ),
   },
 
   Mutation: {
@@ -146,17 +157,25 @@ module.exports = {
             new: true,
             useFindAndModify: false,
           });
-          const addressProperties = Object.entries(address);
-          addressProperties.forEach((addressProperty) => {
-            const propertyName = addressProperty[0];
-            const propertyValue = addressProperty[1];
-            updatedUser.company.address[propertyName] = propertyValue;
-          });
+
+          if (address !== undefined && address != null) {
+            const addressProperties = Object.entries(address);
+            addressProperties.forEach((addressProperty) => {
+              const propertyName = addressProperty[0];
+              const propertyValue = addressProperty[1];
+              updatedUser.company.address[
+                propertyName
+              ] = propertyValue;
+            });
+          }
+
           const companyProperties = Object.entries(company);
           companyProperties.forEach((companyProperty) => {
             const propertyName = companyProperty[0];
             const propertyValue = companyProperty[1];
-            updatedUser.company[propertyName] = propertyValue;
+            if (propertyName !== 'address') {
+              updatedUser.company[propertyName] = propertyValue;
+            }
           });
           updatedUser.save();
           return {
