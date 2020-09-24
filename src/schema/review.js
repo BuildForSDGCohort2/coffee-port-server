@@ -4,13 +4,16 @@ module.exports = gql`
   # mutations
   extend type Mutation {
     postReview(
+      productId: ID!
       review: String!
     ): PostReviewResult!
   }
   # queries
-  extend type Query {
+  # extend type Query {
     # reviews(filter:String): ReviewsResult
-  }
+    # reviews(productId: ID!): ReviewsResult
+    # review(reviewId: ID!): [Review!]!
+  # }
   # custom types
   type Review {
     id: ID!

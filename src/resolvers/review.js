@@ -27,9 +27,9 @@ module.exports = {
             };
           }
           const newReview = new Review({
-            product: foundProduct,
+            product: foundProduct.id,
             text,
-            user: currentUser,
+            user: currentUser.id,
           });
 
           const res = await newReview.save();
@@ -51,33 +51,33 @@ module.exports = {
   },
 
   Query: {
-    async reviews(_, { productId }, { models: { Review } }) {
-      try {
-        const entireReviews = await Review.find({ product: productId });
-        return {
-          __typename: 'Review',
-          ...entireReviews._doc,
-          id: entireReviews._doc._id,
-        };
-      } catch (err) {
-        return {
-          __typename: 'GetReviewsError',
-          message: 'Unable to get reviews',
-          type: `${err}`,
-        };
-      }
-    },
-    async review(_, { productId, reviewId }, { models: { Review } }) {
-      try {
-        const requiredReview = await Review.find({ product: productId, id: reviewId });
-        return requiredReview;
-      } catch (err) {
-        return {
-          __typename: 'GetReviewsError',
-          message: 'Unable to get reviews',
-          type: `${err}`,
-        };
-      }
-    },
+    // async reviews(_, { productId }, { models: { Review } }) {
+    //   try {
+    //     const entireReviews = await Review.find({ product: productId });
+    //     return {
+    //       __typename: 'Review',
+    //       ...entireReviews._doc,
+    //       id: entireReviews._doc._id,
+    //     };
+    //   } catch (err) {
+    //     return {
+    //       __typename: 'GetReviewsError',
+    //       message: 'Unable to get reviews',
+    //       type: `${err}`,
+    //     };
+    //   }
+    // },
+    // async review(_, { reviewId }, { models: { Review } }) {
+    //   try {
+    //     const requiredReview = await Review.find({ id: reviewId });
+    //     return requiredReview;
+    //   } catch (err) {
+    //     return {
+    //       __typename: 'GetReviewsError',
+    //       message: 'Unable to get reviews',
+    //       type: `${err}`,
+    //     };
+    //   }
+    // },
   },
 };
