@@ -71,5 +71,57 @@ module.exports = {
         }
       },
     ),
+    deleteProductReview: combineResolvers(
+      isAuthenitcated,
+      async (
+        _,
+        { productId, reviewId },
+        { models: { Product }, currentUser: { email } },
+      ) => {
+        try {
+          const product = await Product.findById(productId);
+          if (!product) {
+            return {
+              __typename: 'GetProductError',
+              message: "Product doesn't exist",
+              type: 'GetProductError',
+            };
+          }
+
+          const reviewIndex = product.reviews.findIndex(
+            (review) => review.id === reviewId,
+          );
+
+          if (reviewIndex === -1) {
+            return {
+              __typename: 'ReviewDeletionError',
+              message: "Review doesn't exist",
+              type: 'ReviewDeletionError',
+            };
+          }
+          if (product.reviews[reviewIndex].reviewerEmail !== email) {
+            return {
+              __typename: 'ReviewOwnerError',
+              message: 'Not authenticated as review owner',
+              type: 'ReviewOwnerError',
+            };
+          }
+
+          product.reviews.splice(reviewIndex, 1);
+          product.save();
+          return {
+            __typename: 'DeleteProductReview',
+            message: 'Successfuly deleted your review',
+            type: 'DeleteProductReview',
+          };
+        } catch (err) {
+          return {
+            __typename: 'ReviewDeletionError',
+            message: 'Unable to delete your review',
+            type: `${err}`,
+          };
+        }
+      },
+    ),
   },
 };

@@ -34,6 +34,32 @@ const isProductOwner = async (
   return skip;
 };
 
+const isReviewOwner = async (
+  _,
+  { productId, reviewId },
+  { models: { Product }, currentUser: { email } },
+) => {
+  const product = await Product.findById(productId);
+  if (!product) {
+    return {
+      __typename: 'ReviewOwnerError',
+      message: "Product doesn't exist",
+    };
+  }
+
+  const reviewIndex = product.reviews.findIndex(
+    (review) => reviewId === review.id,
+  );
+
+  if (product.reviews[reviewIndex].reviewerEmail !== email) {
+    return {
+      __typename: 'ReviewOwnerError',
+      message: 'Not authenticated as review owner',
+    };
+  }
+
+  return skip;
+};
 const isAdmin = combineResolvers(
   isAuthenitcated,
   (_, __, { currentUser: { role } }) =>

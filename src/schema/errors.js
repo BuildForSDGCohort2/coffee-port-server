@@ -140,4 +140,14 @@ module.exports = gql`
   type ReviewErrors {
     comment: String
   }
+
+  type ReviewOwnerError implements Error {
+    message: String!
+    type: String
+  }
+
+  type ReviewDeletionError implements Error {
+    message: String!
+    type: String
+  }
 `;
