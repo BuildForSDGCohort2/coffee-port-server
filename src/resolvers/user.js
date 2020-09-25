@@ -5,7 +5,7 @@ const {
   validateUpdateUserInput,
 } = require('../util/validators');
 const { createToken } = require('../util/helpers');
-const { isAuthenitcated } = require('./authorization');
+const { isAuthenitcated, isAdmin } = require('./authorization');
 
 module.exports = {
   Query: {
@@ -17,7 +17,6 @@ module.exports = {
         throw new Error(err);
       }
     },
-<<<<<<< HEAD
     async user(_, { id }, { models: { User } }) {
       try {
         const user = await User.findById(id);
@@ -34,19 +33,6 @@ module.exports = {
         };
       }
     },
-=======
-    user: combineResolvers(
-      isAuthenitcated,
-      async (_, { id }, { models: { User } }) => {
-        try {
-          const user = await User.findById(id);
-          return user;
-        } catch (err) {
-          throw new Error(err);
-        }
-      },
-    ),
->>>>>>> develop
   },
 
   Mutation: {
@@ -58,7 +44,6 @@ module.exports = {
           password,
           role,
           confirmPassword,
-          isSupplier,
           phoneNumber,
           company,
           firstName,
@@ -73,13 +58,8 @@ module.exports = {
           companyName,
           websiteUrl,
           // eslint-disable-next-line object-curly-newline
-<<<<<<< HEAD
           address: { city, country, postalCode },
         } = company;
-=======
-          address: { city, street, country, postalCode },
-        } = company || {};
->>>>>>> develop
         // validate user input
         const { userErrors, valid } = validateSignUpInput(
           password,
@@ -95,6 +75,7 @@ module.exports = {
           country,
           postalCode,
         );
+        console.log(userErrors);
         // if not valid input
         if (!valid) {
           return {
@@ -139,7 +120,6 @@ module.exports = {
           firstName,
           lastName,
           phoneNumber,
-          isSupplier,
           isVerified: false,
         });
 
@@ -220,7 +200,7 @@ module.exports = {
     ),
 
     deleteUser: combineResolvers(
-      isAuthenitcated,
+      isAdmin,
       async (_, { id }, { models: { User } }) => {
         try {
           await User.deleteOne({ _id: id });

@@ -69,13 +69,6 @@ module.exports = gql`
     productMeasurementUnit: String!
     productQuantity: Int!
   }
-  input updateProductInput {
-    productName: String
-    productMeasurementUnit: String
-    productQuantity: Int
-    productPrice: Float
-    uniqueAttributes: ProductUniqueAttributesInput
-  }
 
   input ProductUniqueAttributesInput {
     geographicalDesignation: String

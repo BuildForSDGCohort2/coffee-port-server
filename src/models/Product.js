@@ -26,7 +26,6 @@ const productSchema = new Schema({
       address: {
         country: { type: String },
         city: { type: String },
-        street: { type: String },
         postalCode: { type: String },
       },
     },

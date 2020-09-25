@@ -14,7 +14,7 @@ module.exports = gql`
       id: ID!
       updateUserInput: UpdateUserInput!
     ): UpdatedUserResult!
-    deleteUser(id:ID!):DeleteUserResult!
+    deleteUser(id: ID!): DeleteUserResult!
     signIn(email: String!, password: String!): SignInResult!
   }
 
@@ -24,12 +24,11 @@ module.exports = gql`
     firstName: String!
     lastName: String!
     email: String!
-    role: String
+    role: String!
     company: Company!
     phoneNumber: String!
     createdAt: String
     isVerified: Boolean
-    isSupplier: Boolean!
   }
 
   type UpdatedUser {
@@ -41,7 +40,7 @@ module.exports = gql`
     token: String!
   }
 
-  type DeletedUserMessage{
+  type DeletedUserMessage {
     message: String!
     userId: String!
   }
@@ -79,10 +78,9 @@ module.exports = gql`
     firstName: String!
     lastName: String!
     confirmPassword: String!
-    role: String
+    role: String!
     phoneNumber: String!
     company: CompanyInput!
-    isSupplier: Boolean!
   }
 
   input UpdateUserInput {

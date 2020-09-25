@@ -11,7 +11,6 @@ const userSchema = new Schema({
   lastName: String,
   phoneNumber: String,
   isVerified: Boolean,
-  isSupplier: Boolean,
   company: {
     websiteUrl: { type: String },
     companyName: { type: String },

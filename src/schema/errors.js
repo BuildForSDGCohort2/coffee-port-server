@@ -20,13 +20,8 @@ module.exports = gql`
     message: String!
     type: String
   }
-  
-  type GetProductError implements Error {
-    message: String!
-    type: String
-  }
 
-  type UpdateProductError implements Error {
+  type GetProductError implements Error {
     message: String!
     type: String
   }
@@ -90,7 +85,7 @@ module.exports = gql`
     type: String
   }
 
-  type UpdateUserError implements Error{
+  type UpdateUserError implements Error {
     message: String!
     type: String
   }
