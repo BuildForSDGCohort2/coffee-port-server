@@ -1,3 +1,15 @@
+module.exports.validateReview = (comment) => {
+  const reviewErrors = {};
+  if (comment.trim() === '') {
+    reviewErrors.comment = 'Review comment cannot be empty';
+  }
+  return {
+    __typename: 'ReviewInputErrors',
+    reviewErrors,
+    type: 'ReviewInputErrors',
+    valid: Object.keys(reviewErrors).length < 1,
+  };
+};
 module.exports.validateSignUpInput = (
   password,
   confirmPassword,
@@ -148,6 +160,12 @@ module.exports.validateUpdateUserInput = (updateUserInput) => {
 
   if (websiteUrl !== undefined && websiteUrl.trim() === '') {
     errors.websiteUrl = 'company website must not be empty';
+  } else {
+    try {
+      new URL(websiteUrl);
+    } catch (err) {
+      errors.websiteUrl = 'company website must be vaild url';
+    }
   }
   if (companyName !== undefined && companyName.trim() === '') {
     errors.companyName = 'Company name must not be empty';

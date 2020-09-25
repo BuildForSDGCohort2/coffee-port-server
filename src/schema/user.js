@@ -4,7 +4,7 @@ module.exports = gql`
   # queries
   extend type Query {
     user(id: ID!): UserResult
-    users: [User!]
+    users(role: String): UsersResult
   }
 
   # mutations
@@ -29,6 +29,10 @@ module.exports = gql`
     phoneNumber: String!
     createdAt: String
     isVerified: Boolean
+  }
+
+  type Users {
+    users: [User!]
   }
 
   type UpdatedUser {
@@ -71,6 +75,7 @@ module.exports = gql`
     | TokenError
 
   union UserResult = User | UserDoesNotExist
+  union UsersResult = Users | UsersError
   # inputs
   input SignUpUserInput {
     email: String!

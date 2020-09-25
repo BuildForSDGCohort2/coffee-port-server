@@ -119,4 +119,25 @@ module.exports = gql`
     message: String!
     type: String
   }
+
+  type UsersError implements Error {
+    message: String!
+    type: String
+  }
+
+  type ReviewNotAddedError implements Error {
+    message: String!
+    type: String
+  }
+
+  type ReviewInputErrors implements Error {
+    message: String!
+    type: String
+    valid: Boolean!
+    reviewErrors: ReviewErrors!
+  }
+
+  type ReviewErrors {
+    comment: String
+  }
 `;

@@ -6,9 +6,7 @@ const {
   isProductOwner,
 } = require('./authorization.js');
 
-const {
-  validateProductInput,
-} = require('../util/validators');
+const { validateProductInput } = require('../util/validators');
 
 module.exports = {
   Mutation: {
@@ -77,7 +75,11 @@ module.exports = {
     updateProduct: combineResolvers(
       isAuthenitcated,
       isProductOwner,
-      async (_, { id, productToBeUpdated }, { models: { Product } }) => {
+      async (
+        _,
+        { id, productToBeUpdated },
+        { models: { Product } },
+      ) => {
         try {
           const { productErrors, valid } = validateProductInput(
             productToBeUpdated,
@@ -90,7 +92,10 @@ module.exports = {
               valid,
             };
           }
-          const product = await Product.findByIdAndUpdate(id, productToBeUpdated);
+          const product = await Product.findByIdAndUpdate(
+            id,
+            productToBeUpdated,
+          );
           return {
             __typename: 'Product',
             ...product._doc,

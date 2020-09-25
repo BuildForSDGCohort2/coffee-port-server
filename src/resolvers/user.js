@@ -9,12 +9,27 @@ const { isAuthenitcated, isAdmin } = require('./authorization');
 
 module.exports = {
   Query: {
-    async users(_, __, { models: { User } }) {
+    async users(_, { role }, { models: { User } }) {
       try {
+        if (role) {
+          const filteredUsers = await User.find({ role });
+          return {
+            __typename: 'Users',
+            users: filteredUsers,
+          };
+        }
+
         const users = await User.find();
-        return users;
+        return {
+          __typename: 'Users',
+          users,
+        };
       } catch (err) {
-        throw new Error(err);
+        return {
+          __typename: 'UsersError',
+          type: `${err}`,
+          message: 'Unable to retrive users',
+        };
       }
     },
     async user(_, { id }, { models: { User } }) {

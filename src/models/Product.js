@@ -30,9 +30,14 @@ const productSchema = new Schema({
       },
     },
   },
-  code: String,
-  success: Boolean,
-  message: String,
+  reviews: [
+    {
+      comment: { type: String },
+      stars: { type: Number },
+      reviewerEmail: { type: String },
+      createdAt: { type: String },
+    },
+  ],
 });
 
 module.exports = model('Product', productSchema);
