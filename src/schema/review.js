@@ -12,6 +12,12 @@ module.exports = gql`
       productId: ID!
       reviewId: ID!
     ): DeleteProductReviewResult!
+
+    updateReview(
+      reviewId: String!
+      productId: String!
+      newReview: ReviewInput!
+    ): UpdateProductReviewResult!
   }
 
   # custom types
@@ -26,6 +32,7 @@ module.exports = gql`
   type DeleteProductReview {
     message: String!
   }
+
   #results
   union PostProductReviewResult =
       Review
@@ -40,6 +47,15 @@ module.exports = gql`
     | ReviewOwnerError
     | ReviewDeletionError
     | NotAuthenticatedUserError
+
+  union UpdateProductReviewResult =
+      Review
+    | GetProductError
+    | NotAuthenticatedUserError
+    | ReviewOwnerError
+    | UpdateProductReviewError
+    | ReviewInputErrors
+
   # input types
   input ReviewInput {
     comment: String!

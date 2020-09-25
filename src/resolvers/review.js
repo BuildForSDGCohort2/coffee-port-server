@@ -4,6 +4,7 @@ const { combineResolvers } = require('graphql-resolvers');
 const { isAuthenitcated } = require('./authorization.js');
 
 const { validateReview } = require('../util/validators');
+const { update } = require('../models/Product.js');
 
 module.exports = {
   Mutation: {
@@ -87,11 +88,11 @@ module.exports = {
               type: 'GetProductError',
             };
           }
-
+          // get review's index
           const reviewIndex = product.reviews.findIndex(
             (review) => review.id === reviewId,
           );
-
+          // makesure review exists
           if (reviewIndex === -1) {
             return {
               __typename: 'ReviewDeletionError',
@@ -99,6 +100,7 @@ module.exports = {
               type: 'ReviewDeletionError',
             };
           }
+          // makesure current user is owner of review
           if (product.reviews[reviewIndex].reviewerEmail !== email) {
             return {
               __typename: 'ReviewOwnerError',
@@ -118,6 +120,95 @@ module.exports = {
           return {
             __typename: 'ReviewDeletionError',
             message: 'Unable to delete your review',
+            type: `${err}`,
+          };
+        }
+      },
+    ),
+
+    updateReview: combineResolvers(
+      isAuthenitcated,
+      async (
+        _,
+        { reviewId, productId, newReview: { comment, stars } },
+        { models: { Product }, currentUser: { email } },
+      ) => {
+        try {
+          // vaidate review
+          const { valid, reviewErrors } = validateReview(comment);
+          if (!valid) {
+            return {
+              __typename: 'ReviewInputErrors',
+              message: 'Invalid review input',
+              reviewErrors,
+              type: 'ReviewInputErrors',
+              valid,
+            };
+          }
+
+          const product = await Product.findById(productId);
+          if (!product) {
+            return {
+              __typename: 'GetProductError',
+              message: "Product doesn't exist",
+              type: 'GetProductError',
+            };
+          }
+          // get review's index
+          const reviewIndex = product.reviews.findIndex(
+            (review) => review.id === reviewId,
+          );
+          // makesure review exists
+          if (reviewIndex === -1) {
+            return {
+              __typename: 'UpdateProductReviewError',
+              message: "Review doesn't exist",
+              type: 'UpdateProductReviewError',
+            };
+          }
+          // makesure current user is owner of review
+          if (product.reviews[reviewIndex].reviewerEmail !== email) {
+            return {
+              __typename: 'ReviewOwnerError',
+              message: 'Not authenticated as review owner',
+              type: 'ReviewOwnerError',
+            };
+          }
+
+          const updatedAt = new Date().toISOString();
+
+          const test = await Product.update(
+            { 'reviews.id': reviewId },
+            {
+              $set: {
+                'reviews.$.comment': comment,
+                'reviews.$.stars': stars,
+                'reviews.$.createdAt': updatedAt,
+              },
+            },
+          );
+
+          console.log(test);
+          return {
+            __typename: 'Review',
+            id: product.reviews[reviewIndex].id,
+            reviewerEmail: email,
+            createdAt: updatedAt,
+            stars,
+            comment,
+          };
+
+          // product.reviews[reviewIndex] = updatedReview;
+          // console.log(product);
+          // product.save();
+          // return {
+          //   __typename: 'Review',
+          //   ...updatedReview,
+          // };
+        } catch (err) {
+          return {
+            __typename: 'UpdateProductReviewError',
+            message: 'Unable to update your review',
             type: `${err}`,
           };
         }

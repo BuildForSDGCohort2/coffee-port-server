@@ -150,4 +150,9 @@ module.exports = gql`
     message: String!
     type: String
   }
+
+  type UpdateProductReviewError implements Error {
+    message: String!
+    type: String
+  }
 `;
