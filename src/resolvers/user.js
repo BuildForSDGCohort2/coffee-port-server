@@ -74,6 +74,7 @@ module.exports = {
           city,
           country,
           postalCode,
+          role,
         );
         console.log(userErrors);
         // if not valid input

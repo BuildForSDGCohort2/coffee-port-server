@@ -18,13 +18,15 @@ module.exports.validateSignUpInput = (
   if (firstName.trim() === '') {
     errors.firstName = 'First name must not be empty';
   }
-  // if (role.trim() === '') {
-  //   errors.role = 'Role must not be empty';
-  // } else {
-  //   if (role !== 'SUPPLIER' || role !== 'BUYER') {
-  //     errors.role = 'Role value can only be BUYER OR SUPPLIER ';
-  //   }
-  // }
+  if (role.trim() === '') {
+    errors.role = 'Role must not be empty';
+  } else {
+    const validRole =
+      role === 'ADMIN' || role === 'SUPPLIER' || role === 'BUYER';
+    if (!validRole) {
+      errors.role = 'Invalid value for role';
+    }
+  }
 
   if (lastName.trim() === '') {
     errors.lastName = 'Last name must not be empty';
