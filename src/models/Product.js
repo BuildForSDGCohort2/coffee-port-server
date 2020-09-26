@@ -26,13 +26,15 @@ const productSchema = new Schema({
       address: {
         country: { type: String },
         city: { type: String },
-        street: { type: String },
         postalCode: { type: String },
       },
     },
   },
-  review: {
-    text: { type: String },
+  reviews: {
+    comment: { type: String },
+    stars: { type: Number },
+    reviewerEmail: { type: String },
+    createdAt: { type: String },
   },
   code: String,
   success: Boolean,
