@@ -6,14 +6,25 @@ module.exports = gql`
     type: String
   }
 
-  type GetReviewsError implements Error {
-    message: String!
-    type: String
-  }
+  # type GetReviewsError implements Error {
+  #   message: String!
+  #   type: String
+  # }
 
   type ReviewNotAddedError implements Error {
     message: String!
     type: String
+  }
+
+  type ReviewInputErrors implements Error {
+    message: String!
+    type: String
+    valid: Boolean!
+    reviewErrors: ReviewErrors!
+  }
+
+  type ReviewErrors {
+    comment: String
   }
 
   type ProductNotAddedError implements Error {

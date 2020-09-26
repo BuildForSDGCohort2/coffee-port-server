@@ -48,8 +48,7 @@ module.exports.validateSignUpInput = (
   } else {
     const regEx = /^([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})$/;
     if (!companyEmail.match(regEx)) {
-      errors.companyEmail =
-        'Company email must be a valid email address';
+      errors.companyEmail = 'Company email must be a valid email address';
     }
   }
 
@@ -96,5 +95,18 @@ module.exports.validateLoginInput = (email, password) => {
     __typename: 'UserInputError',
     userErrors,
     valid: Object.keys(userErrors).length < 1,
+  };
+};
+
+module.exports.validateReview = (comment) => {
+  const reviewErrors = {};
+  if (comment.trim() === '') {
+    reviewErrors.comment = 'Review comment cannot be empty';
+  }
+  return {
+    __typename: 'ReviewInputErrors',
+    reviewErrors,
+    type: 'ReviewInputErrors',
+    valid: Object.keys(reviewErrors).length < 1,
   };
 };

@@ -3,38 +3,31 @@ const { gql } = require('apollo-server-express');
 module.exports = gql`
   # mutations
   extend type Mutation {
-    postReview(
+    postProductReview(
       productId: ID!
-      review: String!
-    ): PostReviewResult!
+      review: ReviewInput!
+    ): PostProductReviewResult!
   }
-  # queries
-  # extend type Query {
-    # reviews(filter:String): ReviewsResult
-    # reviews(productId: ID!): ReviewsResult
-    # review(reviewId: ID!): [Review!]!
-  # }
+
   # custom types
   type Review {
     id: ID!
-    user: User!
-    product: Product!
-    text: String!
+    reviewerEmail: String!
+    comment: String!
+    stars: Float!
+    createdAt: String!
   }
-
-
   #results
-  union PostReviewResult =
+  union PostProductReviewResult =
       Review
     | ReviewNotAddedError
     | NotAuthenticatedUserError
-  union ReviewsResult = Review | GetReviewsError
-
+    | ReviewInputErrors
+    | GetProductError
 
   # input types
-  # input ReviewInput {
-  #   product: Product!
-  #   text: String!
-  # }
-
+  input ReviewInput {
+    comment: String!
+    stars: Float!
+  }
 `;

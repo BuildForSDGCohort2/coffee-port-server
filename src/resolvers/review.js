@@ -1,42 +1,66 @@
 /* eslint-disable no-underscore-dangle */
 const { combineResolvers } = require('graphql-resolvers');
 
-const {
-  isAuthenitcated,
-} = require('./authorization.js');
+const { isAuthenitcated } = require('./authorization.js');
+
+const { validateReview } = require('../util/validators');
 
 module.exports = {
   Mutation: {
-    postReview: combineResolvers(
+    postProductReview: combineResolvers(
       isAuthenitcated,
       async (
         _,
-        {
-          productId,
-          text,
-        },
-        { models: { Review, Product }, currentUser },
+        { id, review: { comment, stars } },
+        { models: { Product }, currentUser: { email } },
       ) => {
         try {
-          const foundProduct = await Product.findById(productId);
-          if (!foundProduct) {
+          // vaidate review
+          const { valid, reviewErrors } = validateReview(comment);
+          if (!valid) {
             return {
-              __typename: 'GetProductError',
-              message: 'Unable to get product',
-              // type: `${err}`,
+              __typename: 'ReviewInputErrors',
+              message: 'Invalid review input',
+              reviewErrors,
+              type: 'ReviewInputErrors',
+              valid,
             };
           }
-          const newReview = new Review({
-            product: foundProduct.id,
-            text,
-            user: currentUser.id,
+
+          //   const product = await User.findById(id);
+
+          const product = await Product.findOne({ id });
+
+          if (!product) {
+            return {
+              __typename: 'GetProductError',
+              message: 'Product does not exist',
+              type: 'GetProductError',
+            };
+          }
+          product.reviews.unshift({
+            comment,
+            stars,
+            createdAt: new Date().toISOString(),
+            reviewerEmail: email,
           });
 
-          const res = await newReview.save();
+          const updatedProduct = await product.save();
+
+          const {
+            comment: c,
+            stars: s,
+            createdAt: ca,
+            _id,
+          } = updatedProduct._doc.reviews[0];
+
           return {
             __typename: 'Review',
-            ...res._doc,
-            id: res._id,
+            comment: c,
+            stars: s,
+            createdAt: ca,
+            reviewerEmail: email,
+            id: _id,
           };
         } catch (err) {
           return {
@@ -47,37 +71,5 @@ module.exports = {
         }
       },
     ),
-
-  },
-
-  Query: {
-    // async reviews(_, { productId }, { models: { Review } }) {
-    //   try {
-    //     const entireReviews = await Review.find({ product: productId });
-    //     return {
-    //       __typename: 'Review',
-    //       ...entireReviews._doc,
-    //       id: entireReviews._doc._id,
-    //     };
-    //   } catch (err) {
-    //     return {
-    //       __typename: 'GetReviewsError',
-    //       message: 'Unable to get reviews',
-    //       type: `${err}`,
-    //     };
-    //   }
-    // },
-    // async review(_, { reviewId }, { models: { Review } }) {
-    //   try {
-    //     const requiredReview = await Review.find({ id: reviewId });
-    //     return requiredReview;
-    //   } catch (err) {
-    //     return {
-    //       __typename: 'GetReviewsError',
-    //       message: 'Unable to get reviews',
-    //       type: `${err}`,
-    //     };
-    //   }
-    // },
   },
 };
