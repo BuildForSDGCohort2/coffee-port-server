@@ -100,7 +100,7 @@ module.exports = {
           uniqueAttr.forEach((array) => {
             const keys = array[0];
             const values = array[1];
-            product.uniqueAttributes[keys] = array[values];
+            product.uniqueAttributes[keys] = values;
           });
           product.save();
           }
