@@ -207,6 +207,17 @@ module.exports.validateLoginInput = (email, password) => {
   };
 };
 
+module.exports.validateReview = (comment) => {
+  const reviewErrors = {};
+  if (comment.trim() === '') {
+    reviewErrors.comment = 'Review comment cannot be empty';
+  }
+  return {
+    __typename: 'ReviewInputErrors',
+    reviewErrors,
+    type: 'ReviewInputErrors',
+    valid: Object.keys(reviewErrors).length < 1,
+
 module.exports.validateProductInput = (product) => {
   const errors = {};
 
@@ -267,5 +278,6 @@ module.exports.validateProductInput = (product) => {
     productErrors: errors,
     type: 'ProductInputError',
     valid: Object.keys(errors).length < 1,
+
   };
 };

@@ -29,7 +29,7 @@ const productSchema = new Schema({
         postalCode: { type: String },
       },
     },
-  },
+  }
   reviews: [
     {
       comment: { type: String },
@@ -38,6 +38,7 @@ const productSchema = new Schema({
       createdAt: { type: String },
     },
   ],
+
 });
 
 module.exports = model('Product', productSchema);

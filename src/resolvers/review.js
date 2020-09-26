@@ -4,7 +4,7 @@ const { combineResolvers } = require('graphql-resolvers');
 const { isAuthenitcated } = require('./authorization.js');
 
 const { validateReview } = require('../util/validators');
-const { update } = require('../models/Product.js');
+
 
 module.exports = {
   Mutation: {
