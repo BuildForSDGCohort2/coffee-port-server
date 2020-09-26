@@ -20,7 +20,6 @@ const userSchema = new Schema({
       city: { type: String },
       postalCode: { type: String },
     },
-    products: [String],
   },
 });
 
