@@ -217,6 +217,8 @@ module.exports.validateReview = (comment) => {
     reviewErrors,
     type: 'ReviewInputErrors',
     valid: Object.keys(reviewErrors).length < 1,
+  };
+};
 
 module.exports.validateProductInput = (product) => {
   const errors = {};
@@ -278,6 +280,5 @@ module.exports.validateProductInput = (product) => {
     productErrors: errors,
     type: 'ProductInputError',
     valid: Object.keys(errors).length < 1,
-
   };
 };

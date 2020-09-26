@@ -5,7 +5,6 @@ const { isAuthenitcated } = require('./authorization.js');
 
 const { validateReview } = require('../util/validators');
 
-
 module.exports = {
   Mutation: {
     postProductReview: combineResolvers(
@@ -27,8 +26,6 @@ module.exports = {
               valid,
             };
           }
-
-          //   const product = await User.findById(id);
 
           const product = await Product.findOne({ id });
 
