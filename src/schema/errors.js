@@ -41,13 +41,8 @@ module.exports = gql`
     message: String!
     type: String
   }
-  
-  type GetProductError implements Error {
-    message: String!
-    type: String
-  }
 
-  type UpdateProductError implements Error {
+  type GetProductError implements Error {
     message: String!
     type: String
   }
@@ -111,7 +106,7 @@ module.exports = gql`
     type: String
   }
 
-  type UpdateUserError implements Error{
+  type UpdateUserError implements Error {
     message: String!
     type: String
   }
@@ -127,6 +122,57 @@ module.exports = gql`
   }
 
   type ProductOwnerError implements Error {
+    message: String!
+    type: String
+  }
+
+  type ProductError implements Error {
+    message: String!
+    type: String
+  }
+
+  type UpdateProductError implements Error {
+    message: String!
+    type: String
+  }
+
+  type UserDoesNotExist implements Error {
+    message: String!
+    type: String
+  }
+
+  type UsersError implements Error {
+    message: String!
+    type: String
+  }
+
+  type ReviewNotAddedError implements Error {
+    message: String!
+    type: String
+  }
+
+  type ReviewInputErrors implements Error {
+    message: String!
+    type: String
+    valid: Boolean!
+    reviewErrors: ReviewErrors!
+  }
+
+  type ReviewErrors {
+    comment: String
+  }
+
+  type ReviewOwnerError implements Error {
+    message: String!
+    type: String
+  }
+
+  type ReviewDeletionError implements Error {
+    message: String!
+    type: String
+  }
+
+  type UpdateProductReviewError implements Error {
     message: String!
     type: String
   }

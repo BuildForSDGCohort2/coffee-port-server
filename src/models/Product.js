@@ -29,16 +29,16 @@ const productSchema = new Schema({
         postalCode: { type: String },
       },
     },
-  },
-  reviews: {
-    comment: { type: String },
-    stars: { type: Number },
-    reviewerEmail: { type: String },
-    createdAt: { type: String },
-  },
-  code: String,
-  success: Boolean,
-  message: String,
+  }
+  reviews: [
+    {
+      comment: { type: String },
+      stars: { type: Number },
+      reviewerEmail: { type: String },
+      createdAt: { type: String },
+    },
+  ],
+
 });
 
 module.exports = model('Product', productSchema);
