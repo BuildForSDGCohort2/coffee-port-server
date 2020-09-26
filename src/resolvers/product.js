@@ -95,6 +95,7 @@ module.exports = {
 
           const { uniqueAttributes, ...args } = productToBeUpdated;
           const product = await Product.findByIdAndUpdate(id, args, { new: true });
+          if(uniqueAttributes !== undefined){
           const uniqueAttr = Object.entries(uniqueAttributes);
           uniqueAttr.forEach((array) => {
             const keys = array[0];
@@ -102,7 +103,7 @@ module.exports = {
             product.uniqueAttributes[keys] = array[values];
           });
           product.save();
-
+          }
           return {
             __typename: 'Product',
             ...product._doc,
