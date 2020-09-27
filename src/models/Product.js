@@ -5,6 +5,10 @@ const productSchema = new Schema({
   productPrice: Number,
   productQuantity: Number,
   productMeasurementUnit: String,
+  purchased: { 
+    type: Boolean,
+    default: false
+  },
   uniqueAttributes: {
     geographicalDesignation: { type: String },
     grade: { type: String },

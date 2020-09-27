@@ -10,6 +10,11 @@ module.exports = gql`
     comment: String
   }
 
+  type PurchasedProductsError implements Error {
+    message: String!
+    type: String
+  }
+
   type ProductNotAddedError implements Error {
     message: String!
     type: String

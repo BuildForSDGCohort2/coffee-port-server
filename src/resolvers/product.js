@@ -170,5 +170,25 @@ module.exports = {
         };
       }
     },
+    async purchasedProducts(_, {email},{ models: { Product } }) {
+      try {
+        const products = await Product.find({"user.email": email});
+        const purchasedProducts = products.filter((product) => {
+          return product.purchased === true
+        })
+        const amount = purchasedProducts.length
+        return {
+          __typename: 'PurchasedProducts',
+          products: purchasedProducts,
+          amount
+        };
+      } catch (err) {
+        return {
+          __typename: 'PurchasedProductsError',
+          message: 'PurchasedProductsError',
+          type: `${err}`,
+        };
+      }
+    },
   },
 };
