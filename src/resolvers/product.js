@@ -6,9 +6,7 @@ const {
   isProductOwner,
 } = require('./authorization.js');
 
-const {
-  validateProductInput,
-} = require('../util/validators');
+const { validateProductInput } = require('../util/validators');
 
 module.exports = {
   Mutation: {
@@ -77,7 +75,11 @@ module.exports = {
     updateProduct: combineResolvers(
       isAuthenitcated,
       isProductOwner,
-      async (_, { id, productToBeUpdated }, { models: { Product } }) => {
+      async (
+        _,
+        { id, productToBeUpdated },
+        { models: { Product } },
+      ) => {
         try {
           const { productErrors, valid } = validateProductInput(
             productToBeUpdated,
@@ -90,16 +92,17 @@ module.exports = {
               valid,
             };
           }
+
           const { uniqueAttributes, ...args } = productToBeUpdated;
           const product = await Product.findByIdAndUpdate(id, args, { new: true });
-          if (uniqueAttributes !== undefined) {
-            const uniqueAttr = Object.entries(uniqueAttributes);
-            uniqueAttr.forEach((array) => {
-              const keys = array[0];
-              const values = array[1];
-              product.uniqueAttributes[keys] = values;
-            });
-            product.save();
+          if(uniqueAttributes !== undefined){
+          const uniqueAttr = Object.entries(uniqueAttributes);
+          uniqueAttr.forEach((array) => {
+            const keys = array[0];
+            const values = array[1];
+            product.uniqueAttributes[keys] = values;
+          });
+          product.save();
           }
           return {
             __typename: 'Product',

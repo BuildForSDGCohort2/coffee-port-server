@@ -3,9 +3,7 @@ const { gql } = require('apollo-server-express');
 module.exports = gql`
   # mutations
   extend type Mutation {
-    postProduct(
-      product: ProductInput!
-    ): PostProductResult!
+    postProduct(product: ProductInput!): PostProductResult!
     deleteProductPost(id: ID!): DeleteProductPostResult!
     updateProduct(
       id: ID!
@@ -14,8 +12,8 @@ module.exports = gql`
   }
   # queries
   extend type Query {
-    products(filter:String): ProductsResult
-    product(id:ID!):ProductResult
+    products(filter: String): ProductsResult
+    product(id: ID!): ProductResult
   }
   # custom types
   type Product {
@@ -26,6 +24,7 @@ module.exports = gql`
     productQuantity: Int!
     uniqueAttributes: ProductUniqueAttributes!
     productPrice: Float!
+    reviews: [Review!]
   }
 
   type ProductUniqueAttributes {
@@ -54,6 +53,7 @@ module.exports = gql`
     | DeleteProductPostError
     | NotAuthenticatedUserError
     | ProductOwnerError
+
   union ProductsResult = Products | GetProductsError
   union ProductResult = Product | GetProductError
   union UpdateProductResult =
@@ -70,18 +70,19 @@ module.exports = gql`
     productMeasurementUnit: String!
     productQuantity: Int!
   }
-  input updateProductInput {
-    productName: String
-    productMeasurementUnit: String
-    productQuantity: Int
-    productPrice: Float
-    uniqueAttributes: ProductUniqueAttributesInput
-  }
 
   input ProductUniqueAttributesInput {
     geographicalDesignation: String
     grade: String
     group: String
     uniqueName: String
+  }
+
+  input updateProductInput {
+    productName: String
+    productMeasurementUnit: String
+    productQuantity: Int
+    productPrice: Float
+    uniqueAttributes: ProductUniqueAttributesInput
   }
 `;

@@ -5,29 +5,49 @@ const {
   validateUpdateUserInput,
 } = require('../util/validators');
 const { createToken } = require('../util/helpers');
-const { isAuthenitcated } = require('./authorization');
+const { isAuthenitcated, isAdmin } = require('./authorization');
 
 module.exports = {
   Query: {
-    async users(_, __, { models: { User } }) {
+    async users(_, { role }, { models: { User } }) {
       try {
+        if (role) {
+          const filteredUsers = await User.find({ role });
+          return {
+            __typename: 'Users',
+            users: filteredUsers,
+          };
+        }
+
         const users = await User.find();
-        return users;
+        return {
+          __typename: 'Users',
+          users,
+        };
       } catch (err) {
-        throw new Error(err);
+        return {
+          __typename: 'UsersError',
+          type: `${err}`,
+          message: 'Unable to retrive users',
+        };
       }
     },
-    user: combineResolvers(
-      isAuthenitcated,
-      async (_, { id }, { models: { User } }) => {
-        try {
-          const user = await User.findById(id);
-          return user;
-        } catch (err) {
-          throw new Error(err);
-        }
-      },
-    ),
+    async user(_, { id }, { models: { User } }) {
+      try {
+        const user = await User.findById(id);
+        return {
+          __typename: 'User',
+          ...user._doc,
+          id: user._doc._id,
+        };
+      } catch (err) {
+        return {
+          __typename: 'UserDoesNotExist',
+          message: 'Error getting user',
+          type: `${err}`,
+        };
+      }
+    },
   },
 
   Mutation: {
@@ -53,8 +73,8 @@ module.exports = {
           companyName,
           websiteUrl,
           // eslint-disable-next-line object-curly-newline
-          address: { city, street, country, postalCode },
-        } = company || {};
+          address: { city, country, postalCode },
+        } = company;
         // validate user input
         const { userErrors, valid } = validateSignUpInput(
           password,
@@ -67,10 +87,11 @@ module.exports = {
           companyName,
           websiteUrl,
           city,
-          street,
           country,
           postalCode,
+          role,
         );
+        console.log(userErrors);
         // if not valid input
         if (!valid) {
           return {
@@ -115,6 +136,7 @@ module.exports = {
           firstName,
           lastName,
           phoneNumber,
+          isVerified: false,
         });
 
         const res = await newUser.save();
@@ -194,7 +216,7 @@ module.exports = {
     ),
 
     deleteUser: combineResolvers(
-      isAuthenitcated,
+      isAdmin,
       async (_, { id }, { models: { User } }) => {
         try {
           await User.deleteOne({ _id: id });

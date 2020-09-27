@@ -1,3 +1,15 @@
+module.exports.validateReview = (comment) => {
+  const reviewErrors = {};
+  if (comment.trim() === '') {
+    reviewErrors.comment = 'Review comment cannot be empty';
+  }
+  return {
+    __typename: 'ReviewInputErrors',
+    reviewErrors,
+    type: 'ReviewInputErrors',
+    valid: Object.keys(reviewErrors).length < 1,
+  };
+};
 module.exports.validateSignUpInput = (
   password,
   confirmPassword,
@@ -9,14 +21,23 @@ module.exports.validateSignUpInput = (
   companyName,
   websiteUrl,
   city,
-  street,
   country,
   postalCode,
+  role,
 ) => {
   const errors = {};
 
   if (firstName.trim() === '') {
     errors.firstName = 'First name must not be empty';
+  }
+  if (role.trim() === '') {
+    errors.role = 'Role must not be empty';
+  } else {
+    const validRole =
+      role === 'ADMIN' || role === 'SUPPLIER' || role === 'BUYER';
+    if (!validRole) {
+      errors.role = 'Invalid value for role';
+    }
   }
 
   if (lastName.trim() === '') {
@@ -35,10 +56,6 @@ module.exports.validateSignUpInput = (
     errors.country = 'country must not be empty';
   }
 
-  if (street.trim() === '') {
-    errors.street = 'street  must not be empty';
-  }
-
   if (postalCode.trim() === '') {
     errors.postalCode = 'Postal code must not be empty';
   }
@@ -48,12 +65,19 @@ module.exports.validateSignUpInput = (
   } else {
     const regEx = /^([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})$/;
     if (!companyEmail.match(regEx)) {
-      errors.companyEmail = 'Company email must be a valid email address';
+      errors.companyEmail =
+        'Company email must be a valid email address';
     }
   }
 
   if (websiteUrl.trim() === '') {
     errors.websiteUrl = 'company website must not be empty';
+  } else {
+    try {
+      new URL(websiteUrl);
+    } catch (err) {
+      errors.websiteUrl = 'company website must be vaild url';
+    }
   }
 
   if (companyName.trim() === '') {
@@ -82,9 +106,7 @@ module.exports.validateSignUpInput = (
   };
 };
 
-module.exports.validateUpdateUserInput = (
-  updateUserInput,
-) => {
+module.exports.validateUpdateUserInput = (updateUserInput) => {
   const {
     password,
     email,
@@ -93,12 +115,9 @@ module.exports.validateUpdateUserInput = (
     phoneNumber,
     company,
   } = updateUserInput;
-  const {
-    companyEmail, companyName, websiteUrl, address,
-  } = company || {};
-  const {
-    city, street, country, postalCode,
-  } = address || {};
+  const { companyEmail, companyName, websiteUrl, address } =
+    company || {};
+  const { city, street, country, postalCode } = address || {};
   const errors = {};
 
   if (firstName !== undefined && firstName.trim() === '') {
@@ -134,14 +153,20 @@ module.exports.validateUpdateUserInput = (
   } else {
     const regEx = /^([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})$/;
     if (companyEmail !== undefined && !companyEmail.match(regEx)) {
-      errors.companyEmail = 'Company email must be a valid email address';
+      errors.companyEmail =
+        'Company email must be a valid email address';
     }
   }
 
   if (websiteUrl !== undefined && websiteUrl.trim() === '') {
     errors.websiteUrl = 'company website must not be empty';
+  } else {
+    try {
+      new URL(websiteUrl);
+    } catch (err) {
+      errors.websiteUrl = 'company website must be vaild url';
+    }
   }
-
   if (companyName !== undefined && companyName.trim() === '') {
     errors.companyName = 'Company name must not be empty';
   }
@@ -182,6 +207,19 @@ module.exports.validateLoginInput = (email, password) => {
   };
 };
 
+module.exports.validateReview = (comment) => {
+  const reviewErrors = {};
+  if (comment.trim() === '') {
+    reviewErrors.comment = 'Review comment cannot be empty';
+  }
+  return {
+    __typename: 'ReviewInputErrors',
+    reviewErrors,
+    type: 'ReviewInputErrors',
+    valid: Object.keys(reviewErrors).length < 1,
+  };
+};
+
 module.exports.validateProductInput = (product) => {
   const errors = {};
 
@@ -189,22 +227,38 @@ module.exports.validateProductInput = (product) => {
     errors.ProductName = 'Product name must not be empty';
   }
 
-  if (product.productPrice && typeof (product.productPrice) !== 'number') {
+  if (
+    product.productPrice &&
+    typeof product.productPrice !== 'number'
+  ) {
     errors.productPrice = 'Product price must not be empty';
   }
 
-  if (product.productQuantity && typeof (product.productQuantity) !== 'number') {
+  if (
+    product.productQuantity &&
+    typeof product.productQuantity !== 'number'
+  ) {
     errors.productQuantity = 'Product quantity must not be empty';
   }
 
-  if (product.productMeasurementUnit && product.productMeasurementUnit.trim() === '') {
-    errors.productMeasurementUnit = 'Product measurement unit must not be empty';
+  if (
+    product.productMeasurementUnit &&
+    product.productMeasurementUnit.trim() === ''
+  ) {
+    errors.productMeasurementUnit =
+      'Product measurement unit must not be empty';
   }
   if (product.uniqueAttributes) {
-    if (product.uniqueAttributes.uniqueName && product.uniqueAttributes.uniqueName.trim() === '') {
+    if (
+      product.uniqueAttributes.uniqueName &&
+      product.uniqueAttributes.uniqueName.trim() === ''
+    ) {
       errors.uniqueName = 'Unique name must not be empty';
     }
-    if (product.uniqueAttributes.group && product.uniqueAttributes.group.trim() === '') {
+    if (
+      product.uniqueAttributes.group &&
+      product.uniqueAttributes.group.trim() === ''
+    ) {
       errors.group = 'Group must not be empty';
     }
     if (product.uniqueAttributes.grade) {
@@ -212,8 +266,12 @@ module.exports.validateProductInput = (product) => {
         errors.grade = 'Grade must not be empty';
       }
     }
-    if (product.uniqueAttributes.geographicalDesignation && product.uniqueAttributes.geographicalDesignation.trim() === '') {
-      errors.geographicalDesignation = 'Geographical Designation must not be empty';
+    if (
+      product.uniqueAttributes.geographicalDesignation &&
+      product.uniqueAttributes.geographicalDesignation.trim() === ''
+    ) {
+      errors.geographicalDesignation =
+        'Geographical Designation must not be empty';
     }
   }
   // console.log(errors);
