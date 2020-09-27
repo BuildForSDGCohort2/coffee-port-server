@@ -29,6 +29,7 @@ module.exports = gql`
     phoneNumber: String!
     createdAt: String
     isVerified: Boolean
+    products:[Product!]
   }
 
   type Users {
