@@ -6,6 +6,8 @@ const {
   isProductOwner,
 } = require('./authorization.js');
 
+const { pubsub, EVENTS } = require('../subscription');
+
 const { validateProductInput } = require('../util/validators');
 
 module.exports = {
@@ -35,7 +37,10 @@ module.exports = {
           });
 
           const res = await newProduct.save();
-
+          console.log(EVENTS.REQUEST);
+          pubsub.publish(EVENTS.REQUEST.REQUESTED, {
+            productCreated: { ...res._doc, id: res._id },
+          });
           return {
             __typename: 'Product',
             ...res._doc,
@@ -94,15 +99,17 @@ module.exports = {
           }
 
           const { uniqueAttributes, ...args } = productToBeUpdated;
-          const product = await Product.findByIdAndUpdate(id, args, { new: true });
-          if(uniqueAttributes !== undefined){
-          const uniqueAttr = Object.entries(uniqueAttributes);
-          uniqueAttr.forEach((array) => {
-            const keys = array[0];
-            const values = array[1];
-            product.uniqueAttributes[keys] = values;
+          const product = await Product.findByIdAndUpdate(id, args, {
+            new: true,
           });
-          product.save();
+          if (uniqueAttributes !== undefined) {
+            const uniqueAttr = Object.entries(uniqueAttributes);
+            uniqueAttr.forEach((array) => {
+              const keys = array[0];
+              const values = array[1];
+              product.uniqueAttributes[keys] = values;
+            });
+            product.save();
           }
           return {
             __typename: 'Product',
@@ -118,6 +125,12 @@ module.exports = {
         }
       },
     ),
+  },
+
+  Subscription: {
+    productCreated: {
+      subscribe: () => pubsub.asyncIterator(EVENTS.REQUEST.REQUESTED),
+    },
   },
 
   Query: {

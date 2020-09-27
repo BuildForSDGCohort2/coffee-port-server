@@ -1,0 +1,5 @@
+const REQUESTED = 'REQUESTED';
+const ACCEPTED = 'ACCEPTED';
+const DECLINED = 'DECLINED';
+
+module.exports = { REQUESTED, ACCEPTED, DECLINED };

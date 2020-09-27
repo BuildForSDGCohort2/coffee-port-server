@@ -15,6 +15,11 @@ module.exports = gql`
     products(filter: String): ProductsResult
     product(id: ID!): ProductResult
   }
+
+  # subscriptions
+  extend type Subscription {
+    productCreated: Product!
+  }
   # custom types
   type Product {
     id: ID!
