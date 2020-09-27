@@ -2,8 +2,6 @@ const { PubSub } = require('apollo-server');
 
 const { ACCEPTED, DECLINED, REQUESTED } = require('./request.js');
 
-console.log(ACCEPTED);
-
 const EVENTS = {
   REQUEST: {
     ACCEPTED,

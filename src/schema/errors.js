@@ -155,4 +155,9 @@ module.exports = gql`
     message: String!
     type: String
   }
+
+  type CreateProductRequestError implements Error {
+    message: String!
+    type: String
+  }
 `;

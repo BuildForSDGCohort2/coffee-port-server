@@ -6,7 +6,7 @@ const requestSchema = new Schema({
     ref: 'User',
     required: true,
   },
-  product: {
+  requestedProduct: {
     type: Schema.Types.ObjectId,
     ref: 'Product',
     required: true,
