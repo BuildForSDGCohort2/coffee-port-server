@@ -15,6 +15,16 @@ module.exports = gql`
     type: String
   }
 
+  type ReportDoesNotExist implements Error {
+    message: String!
+    type: String
+  }
+
+  type ReportsDoesNotExist implements Error {
+    message: String!
+    type: String
+  }
+
   type ProductNotAddedError implements Error {
     message: String!
     type: String

@@ -5,9 +5,9 @@ const productSchema = new Schema({
   productPrice: Number,
   productQuantity: Number,
   productMeasurementUnit: String,
-  purchased: { 
+  purchased: {
     type: Boolean,
-    default: false
+    default: false,
   },
   uniqueAttributes: {
     geographicalDesignation: { type: String },

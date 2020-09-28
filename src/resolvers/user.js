@@ -50,23 +50,6 @@ module.exports = {
     },
   },
 
-  User: {
-    async products(parent, _, { models: { Product } }) {
-      try {
-        const products = await Product.find();
-        return products.filter((product) => {
-          return product.user.email === parent.email
-        })
-      } catch (err) {
-        return {
-          __typename: 'GetProductsError',
-          message: 'Unable to get products',
-          type: `${err}`,
-        };
-      }
-    } 
-  },
-
   Mutation: {
     async createUser(
       _,
