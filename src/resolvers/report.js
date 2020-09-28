@@ -1,6 +1,6 @@
 const { combineResolvers } = require('graphql-resolvers');
 const { isAuthenitcated, isverified } = require('./authorization');
-const { sendMail } = require('../util/sendmail');
+const { sendReportMail } = require('../util/sendmail');
 
 module.exports = {
   Query: {
@@ -62,7 +62,7 @@ module.exports = {
             currentUser,
             reportMessage,
           };
-          sendMail(data);
+          sendReportMail(data);
           return {
             __typename: 'Reported',
             report: res,

@@ -1,15 +1,3 @@
-module.exports.validateReview = (comment) => {
-  const reviewErrors = {};
-  if (comment.trim() === '') {
-    reviewErrors.comment = 'Review comment cannot be empty';
-  }
-  return {
-    __typename: 'ReviewInputErrors',
-    reviewErrors,
-    type: 'ReviewInputErrors',
-    valid: Object.keys(reviewErrors).length < 1,
-  };
-};
 module.exports.validateSignUpInput = (
   password,
   confirmPassword,
@@ -72,7 +60,7 @@ module.exports.validateSignUpInput = (
     errors.websiteUrl = 'company website must not be empty';
   } else {
     try {
-      URL(websiteUrl);
+      new URL(websiteUrl);
     } catch (err) {
       errors.websiteUrl = 'company website must be vaild url';
     }
@@ -162,7 +150,7 @@ module.exports.validateUpdateUserInput = (updateUserInput) => {
       errors.websiteUrl = 'company website must not be empty';
     } else {
       try {
-        URL(company.websiteUrl);
+        new URL(company.websiteUrl);
       } catch (err) {
         errors.company.websiteUrl = 'company website must be vaild url';
       }
