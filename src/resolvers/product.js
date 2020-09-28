@@ -95,14 +95,14 @@ module.exports = {
 
           const { uniqueAttributes, ...args } = productToBeUpdated;
           const product = await Product.findByIdAndUpdate(id, args, { new: true });
-          if(uniqueAttributes !== undefined){
-          const uniqueAttr = Object.entries(uniqueAttributes);
-          uniqueAttr.forEach((array) => {
-            const keys = array[0];
-            const values = array[1];
-            product.uniqueAttributes[keys] = values;
-          });
-          product.save();
+          if (uniqueAttributes !== undefined) {
+            const uniqueAttr = Object.entries(uniqueAttributes);
+            uniqueAttr.forEach((array) => {
+              const keys = array[0];
+              const values = array[1];
+              product.uniqueAttributes[keys] = values;
+            });
+            product.save();
           }
           return {
             __typename: 'Product',
@@ -170,17 +170,15 @@ module.exports = {
         };
       }
     },
-    async purchasedProducts(_, {email},{ models: { Product } }) {
+    async purchasedProducts(_, { email }, { models: { Product } }) {
       try {
-        const products = await Product.find({"user.email": email});
-        const purchasedProducts = products.filter((product) => {
-          return product.purchased === true
-        })
-        const amount = purchasedProducts.length
+        const products = await Product.find({ 'user.email': email });
+        const purchasedProducts = products.filter((product) => product.purchased === true);
+        const amount = purchasedProducts.length;
         return {
           __typename: 'PurchasedProducts',
           products: purchasedProducts,
-          amount
+          amount,
         };
       } catch (err) {
         return {
