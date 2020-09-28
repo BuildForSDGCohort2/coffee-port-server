@@ -50,6 +50,21 @@ module.exports = {
     },
   },
 
+  User: {
+    async products(parent, _, { models: { Product } }) {
+      try {
+        const products = await Product.find();
+        return products.filter((product) => product.user.email === parent.email);
+      } catch (err) {
+        return {
+          __typename: 'GetProductsError',
+          message: 'Unable to get products',
+          type: `${err}`,
+        };
+      }
+    },
+  },
+
   Mutation: {
     async createUser(
       _,
@@ -174,31 +189,30 @@ module.exports = {
             };
           }
           const { company, ...args } = updateUserInput;
-          const { address } = company;
           const updatedUser = await User.findByIdAndUpdate(id, args, {
             new: true,
-            useFindAndModify: false,
           });
-
-          if (address !== undefined && address != null) {
-            const addressProperties = Object.entries(address);
-            addressProperties.forEach((addressProperty) => {
-              const propertyName = addressProperty[0];
-              const propertyValue = addressProperty[1];
-              updatedUser.company.address[
-                propertyName
-              ] = propertyValue;
+          if (company !== undefined) {
+            const { address } = company;
+            const companyProperties = Object.entries(company);
+            companyProperties.forEach((companyProperty) => {
+              const propertyName = companyProperty[0];
+              const propertyValue = companyProperty[1];
+              if (propertyName !== 'address') {
+                updatedUser.company[propertyName] = propertyValue;
+              }
             });
-          }
-
-          const companyProperties = Object.entries(company);
-          companyProperties.forEach((companyProperty) => {
-            const propertyName = companyProperty[0];
-            const propertyValue = companyProperty[1];
-            if (propertyName !== 'address') {
-              updatedUser.company[propertyName] = propertyValue;
+            if (address !== undefined) {
+              const addressProperties = Object.entries(address);
+              addressProperties.forEach((addressProperty) => {
+                const propertyName = addressProperty[0];
+                const propertyValue = addressProperty[1];
+                updatedUser.company.address[
+                  propertyName
+                ] = propertyValue;
+              });
             }
-          });
+          }
           updatedUser.save();
           return {
             __typename: 'UpdatedUser',

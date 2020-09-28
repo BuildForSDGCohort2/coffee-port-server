@@ -41,4 +41,17 @@ const isAdmin = combineResolvers(
       ? skip
       : new ForbiddenError('Not authorized as admin.'),
 );
-module.exports = { isAuthenitcated, isProductOwner, isAdmin };
+
+const isverified = combineResolvers(
+  isAuthenitcated,
+  (_, __, { currentUser: { isVerified } }) =>
+  isVerified === true
+      ? skip
+      : new ForbiddenError('Not a verified user, please check your email to verify your email address.'),
+);
+module.exports = {
+  isAuthenitcated,
+  isProductOwner,
+  isAdmin,
+  isverified,
+};

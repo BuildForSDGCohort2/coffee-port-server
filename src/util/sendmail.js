@@ -12,7 +12,7 @@ module.exports.sendMail = async (data) => {
   };
   try {
     await sgMail.send(msg);
-    console.log("email sent");
+    console.log('email sent');
   } catch (err) {
     throw new Error(err);
   }

@@ -4,6 +4,7 @@ const { combineResolvers } = require('graphql-resolvers');
 const {
   isAuthenitcated,
   isProductOwner,
+  isverified,
 } = require('./authorization.js');
 
 const { validateProductInput } = require('../util/validators');
@@ -12,6 +13,7 @@ module.exports = {
   Mutation: {
     postProduct: combineResolvers(
       isAuthenitcated,
+      isverified,
       async (
         _,
         { product },

@@ -33,8 +33,7 @@ module.exports.validateSignUpInput = (
   if (role.trim() === '') {
     errors.role = 'Role must not be empty';
   } else {
-    const validRole =
-      role === 'ADMIN' || role === 'SUPPLIER' || role === 'BUYER';
+    const validRole = role === 'ADMIN' || role === 'SUPPLIER' || role === 'BUYER';
     if (!validRole) {
       errors.role = 'Invalid value for role';
     }
@@ -65,8 +64,7 @@ module.exports.validateSignUpInput = (
   } else {
     const regEx = /^([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})$/;
     if (!companyEmail.match(regEx)) {
-      errors.companyEmail =
-        'Company email must be a valid email address';
+      errors.companyEmail = 'Company email must be a valid email address';
     }
   }
 
@@ -74,7 +72,7 @@ module.exports.validateSignUpInput = (
     errors.websiteUrl = 'company website must not be empty';
   } else {
     try {
-      new URL(websiteUrl);
+      URL(websiteUrl);
     } catch (err) {
       errors.websiteUrl = 'company website must be vaild url';
     }
@@ -112,12 +110,11 @@ module.exports.validateUpdateUserInput = (updateUserInput) => {
     email,
     firstName,
     lastName,
+    isVerified,
     phoneNumber,
     company,
   } = updateUserInput;
-  const { companyEmail, companyName, websiteUrl, address } =
-    company || {};
-  const { city, street, country, postalCode } = address || {};
+
   const errors = {};
 
   if (firstName !== undefined && firstName.trim() === '') {
@@ -128,47 +125,51 @@ module.exports.validateUpdateUserInput = (updateUserInput) => {
     errors.lastName = 'Last name must not be empty';
   }
 
+  if (isVerified !== undefined && typeof isVerified !== 'boolean') {
+    errors.isVerified = 'isVerified must be a boolean value';
+  }
+
   if (phoneNumber !== undefined && phoneNumber.trim() === '') {
     errors.phoneNumber = 'Phone number  must not be empty';
   }
-
-  if (city !== undefined && city.trim() === '') {
-    errors.city = 'city  must not be empty';
-  }
-
-  if (country !== undefined && country.trim() === '') {
-    errors.country = 'country must not be empty';
-  }
-
-  if (street !== undefined && street.trim() === '') {
-    errors.street = 'street  must not be empty';
-  }
-
-  if (postalCode !== undefined && postalCode.trim() === '') {
-    errors.postalCode = 'Postal code must not be empty';
-  }
-
-  if (companyEmail !== undefined && companyEmail.trim() === '') {
-    errors.companyEmail = 'Company email  must not be empty';
-  } else {
-    const regEx = /^([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})$/;
-    if (companyEmail !== undefined && !companyEmail.match(regEx)) {
-      errors.companyEmail =
-        'Company email must be a valid email address';
+  if (company !== undefined) {
+    if (company.address.city !== undefined && company.address.city.trim() === '') {
+      errors.city = 'city  must not be empty';
     }
-  }
 
-  if (websiteUrl !== undefined && websiteUrl.trim() === '') {
-    errors.websiteUrl = 'company website must not be empty';
-  } else {
-    try {
-      new URL(websiteUrl);
-    } catch (err) {
-      errors.websiteUrl = 'company website must be vaild url';
+    if (company.address.country !== undefined && company.address.country.trim() === '') {
+      errors.country = 'country must not be empty';
     }
-  }
-  if (companyName !== undefined && companyName.trim() === '') {
-    errors.companyName = 'Company name must not be empty';
+
+    if (company.address.street !== undefined && company.address.street.trim() === '') {
+      errors.street = 'street  must not be empty';
+    }
+
+    if (company.address.postalCode !== undefined && company.address.postalCode.trim() === '') {
+      errors.postalCode = 'Postal code must not be empty';
+    }
+
+    if (company.companyEmail !== undefined && company.companyEmail.trim() === '') {
+      errors.companyEmail = 'Company email  must not be empty';
+    } else {
+      const regEx = /^([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})$/;
+      if (company.companyEmail !== undefined && !company.companyEmail.match(regEx)) {
+        errors.company.companyEmail = 'Company email must be a valid email address';
+      }
+    }
+
+    if (company.websiteUrl !== undefined && company.websiteUrl.trim() === '') {
+      errors.websiteUrl = 'company website must not be empty';
+    } else {
+      try {
+        URL(company.websiteUrl);
+      } catch (err) {
+        errors.company.websiteUrl = 'company website must be vaild url';
+      }
+    }
+    if (company.companyName !== undefined && company.companyName.trim() === '') {
+      errors.company.companyName = 'Company name must not be empty';
+    }
   }
 
   if (email !== undefined && email.trim() === '') {
@@ -228,50 +229,46 @@ module.exports.validateProductInput = (product) => {
   }
 
   if (
-    product.productPrice &&
-    typeof product.productPrice !== 'number'
+    product.productPrice
+    && typeof product.productPrice !== 'number'
   ) {
     errors.productPrice = 'Product price must not be empty';
   }
 
   if (
-    product.productQuantity &&
-    typeof product.productQuantity !== 'number'
+    product.productQuantity
+    && typeof product.productQuantity !== 'number'
   ) {
     errors.productQuantity = 'Product quantity must not be empty';
   }
 
   if (
-    product.productMeasurementUnit &&
-    product.productMeasurementUnit.trim() === ''
+    product.productMeasurementUnit
+    && product.productMeasurementUnit.trim() === ''
   ) {
-    errors.productMeasurementUnit =
-      'Product measurement unit must not be empty';
+    errors.productMeasurementUnit = 'Product measurement unit must not be empty';
   }
   if (product.uniqueAttributes) {
     if (
-      product.uniqueAttributes.uniqueName &&
-      product.uniqueAttributes.uniqueName.trim() === ''
+      product.uniqueAttributes.uniqueName
+      && product.uniqueAttributes.uniqueName.trim() === ''
     ) {
       errors.uniqueName = 'Unique name must not be empty';
     }
     if (
-      product.uniqueAttributes.group &&
-      product.uniqueAttributes.group.trim() === ''
+      product.uniqueAttributes.group
+      && product.uniqueAttributes.group.trim() === ''
     ) {
       errors.group = 'Group must not be empty';
     }
-    if (product.uniqueAttributes.grade) {
-      if (product.uniqueAttributes.grade.trim() === '') {
-        errors.grade = 'Grade must not be empty';
-      }
+    if (product.uniqueAttributes.grade.trim() === '') {
+      errors.grade = 'Grade must not be empty';
     }
     if (
-      product.uniqueAttributes.geographicalDesignation &&
-      product.uniqueAttributes.geographicalDesignation.trim() === ''
+      product.uniqueAttributes.geographicalDesignation
+      && product.uniqueAttributes.geographicalDesignation.trim() === ''
     ) {
-      errors.geographicalDesignation =
-        'Geographical Designation must not be empty';
+      errors.geographicalDesignation = 'Geographical Designation must not be empty';
     }
   }
   // console.log(errors);

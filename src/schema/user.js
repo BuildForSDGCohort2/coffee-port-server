@@ -96,6 +96,7 @@ module.exports = gql`
     lastName: String
     confirmPassword: String
     role: String
+    isVerified: Boolean
     phoneNumber: String
     company: UpdateCompanyInput
   }

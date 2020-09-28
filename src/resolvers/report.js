@@ -1,5 +1,5 @@
 const { combineResolvers } = require('graphql-resolvers');
-const { isAuthenitcated } = require('./authorization');
+const { isAuthenitcated, isverified } = require('./authorization');
 const { sendMail } = require('../util/sendmail');
 
 module.exports = {
@@ -40,6 +40,7 @@ module.exports = {
   Mutation: {
     reportUsers: combineResolvers(
       isAuthenitcated,
+      isverified,
       async (_, { reportedUser: { id }, reportMessage },
         { models: { User, Report }, currentUser }) => {
         try {
