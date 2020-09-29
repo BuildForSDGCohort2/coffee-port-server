@@ -4,6 +4,7 @@ const { combineResolvers } = require('graphql-resolvers');
 const {
   isAuthenitcated,
   isProductOwner,
+  isverified,
 } = require('./authorization.js');
 
 const { pubsub, EVENTS } = require('../subscription');
@@ -14,6 +15,7 @@ module.exports = {
   Mutation: {
     postProduct: combineResolvers(
       isAuthenitcated,
+      isverified,
       async (
         _,
         { product },
@@ -99,6 +101,7 @@ module.exports = {
           }
 
           const { uniqueAttributes, ...args } = productToBeUpdated;
+          console.log(uniqueAttributes);
           const product = await Product.findByIdAndUpdate(id, args, {
             new: true,
           });
@@ -179,6 +182,26 @@ module.exports = {
         return {
           __typename: 'GetProductError',
           message: 'Unable to get product',
+          type: `${err}`,
+        };
+      }
+    },
+    async purchasedProducts(_, { email }, { models: { Product } }) {
+      try {
+        const products = await Product.find({ 'user.email': email });
+        const purchasedProducts = products.filter(
+          (product) => product.purchased === true,
+        );
+        const amount = purchasedProducts.length;
+        return {
+          __typename: 'PurchasedProducts',
+          products: purchasedProducts,
+          amount,
+        };
+      } catch (err) {
+        return {
+          __typename: 'PurchasedProductsError',
+          message: 'PurchasedProductsError',
           type: `${err}`,
         };
       }

@@ -10,7 +10,10 @@ const userSchema = new Schema({
   firstName: String,
   lastName: String,
   phoneNumber: String,
-  isVerified: Boolean,
+  isVerified: {
+    type: Boolean,
+    default: false,
+  },
   company: {
     websiteUrl: { type: String },
     companyName: { type: String },

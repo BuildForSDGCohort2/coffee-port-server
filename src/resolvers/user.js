@@ -1,4 +1,5 @@
 const { combineResolvers } = require('graphql-resolvers');
+const jwt = require('jsonwebtoken');
 const {
   validateSignUpInput,
   validateLoginInput,
@@ -6,6 +7,7 @@ const {
 } = require('../util/validators');
 const { createToken } = require('../util/helpers');
 const { isAuthenitcated, isAdmin } = require('./authorization');
+const { sendVerificationMail } = require('../util/sendmail');
 
 module.exports = {
   Query: {
@@ -44,6 +46,21 @@ module.exports = {
         return {
           __typename: 'UserDoesNotExist',
           message: 'Error getting user',
+          type: `${err}`,
+        };
+      }
+    },
+  },
+
+  User: {
+    async products(parent, _, { models: { Product } }) {
+      try {
+        const products = await Product.find();
+        return products.filter((product) => product.user.email === parent.email);
+      } catch (err) {
+        return {
+          __typename: 'GetProductsError',
+          message: 'Unable to get products',
           type: `${err}`,
         };
       }
@@ -91,7 +108,6 @@ module.exports = {
           postalCode,
           role,
         );
-        console.log(userErrors);
         // if not valid input
         if (!valid) {
           return {
@@ -140,6 +156,11 @@ module.exports = {
         });
 
         const res = await newUser.save();
+        const data = {
+          emails: [res.email, res.company.companyEmail],
+          token: await createToken(res, secret, '30m'),
+        };
+        sendVerificationMail(data);
         return {
           __typename: 'Token',
           token: await createToken(res, secret, '30m'),
@@ -174,31 +195,30 @@ module.exports = {
             };
           }
           const { company, ...args } = updateUserInput;
-          const { address } = company;
           const updatedUser = await User.findByIdAndUpdate(id, args, {
             new: true,
-            useFindAndModify: false,
           });
-
-          if (address !== undefined && address != null) {
-            const addressProperties = Object.entries(address);
-            addressProperties.forEach((addressProperty) => {
-              const propertyName = addressProperty[0];
-              const propertyValue = addressProperty[1];
-              updatedUser.company.address[
-                propertyName
-              ] = propertyValue;
+          if (company !== undefined) {
+            const { address } = company;
+            const companyProperties = Object.entries(company);
+            companyProperties.forEach((companyProperty) => {
+              const propertyName = companyProperty[0];
+              const propertyValue = companyProperty[1];
+              if (propertyName !== 'address') {
+                updatedUser.company[propertyName] = propertyValue;
+              }
             });
-          }
-
-          const companyProperties = Object.entries(company);
-          companyProperties.forEach((companyProperty) => {
-            const propertyName = companyProperty[0];
-            const propertyValue = companyProperty[1];
-            if (propertyName !== 'address') {
-              updatedUser.company[propertyName] = propertyValue;
+            if (address !== undefined) {
+              const addressProperties = Object.entries(address);
+              addressProperties.forEach((addressProperty) => {
+                const propertyName = addressProperty[0];
+                const propertyValue = addressProperty[1];
+                updatedUser.company.address[
+                  propertyName
+                ] = propertyValue;
+              });
             }
-          });
+          }
           updatedUser.save();
           return {
             __typename: 'UpdatedUser',
@@ -289,6 +309,23 @@ module.exports = {
           __typename: 'SignInError',
           type: `${err}`,
           message: 'Unable to sign in',
+        };
+      }
+    },
+    verifyUser: async (_, { token }, { models: { User } }) => {
+      try {
+        const user = await jwt.verify(token, process.env.SECRET);
+        const { id } = user;
+        await User.findByIdAndUpdate(id, { isVerified: true });
+        return {
+          __typename: 'VerifiedMessage',
+          message: 'you\'re email address has been verified',
+        };
+      } catch (err) {
+        return {
+          __typename: 'TokenError',
+          message: 'wrong token',
+          type: `${err}`,
         };
       }
     },

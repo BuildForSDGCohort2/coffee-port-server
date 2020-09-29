@@ -14,6 +14,7 @@ module.exports = gql`
   extend type Query {
     products(filter: String): ProductsResult
     product(id: ID!): ProductResult
+    purchasedProducts(email:String!): PurchasedProductsResult!
   }
 
   # subscriptions
@@ -29,6 +30,7 @@ module.exports = gql`
     productQuantity: Int!
     uniqueAttributes: ProductUniqueAttributes!
     productPrice: Float!
+    purchased: Boolean
     reviews: [Review!]
   }
 
@@ -37,6 +39,7 @@ module.exports = gql`
     grade: String
     group: String
     uniqueName: String
+    flowerType: String
   }
 
   type DeleteProductPost {
@@ -45,6 +48,11 @@ module.exports = gql`
 
   type Products {
     products: [Product!]
+  }
+  
+  type PurchasedProducts {
+    products: [Product!]
+    amount: Int!
   }
 
   #results
@@ -66,7 +74,9 @@ module.exports = gql`
     | UpdateProductError
     | ProductInputError
     | ProductOwnerError
-
+  union PurchasedProductsResult = 
+      PurchasedProducts
+    | PurchasedProductsError
   # input types
   input ProductInput {
     productName: String!
@@ -74,6 +84,7 @@ module.exports = gql`
     productPrice: Float!
     productMeasurementUnit: String!
     productQuantity: Int!
+    purchased: Boolean
   }
 
   input ProductUniqueAttributesInput {
@@ -81,6 +92,7 @@ module.exports = gql`
     grade: String
     group: String
     uniqueName: String
+    flowerType: String
   }
 
   input updateProductInput {
@@ -88,6 +100,7 @@ module.exports = gql`
     productMeasurementUnit: String
     productQuantity: Int
     productPrice: Float
+    purchased: Boolean
     uniqueAttributes: ProductUniqueAttributesInput
   }
 `;

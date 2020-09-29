@@ -6,6 +6,7 @@ const companySchema = require('./company.js');
 const errorsSchema = require('./errors.js');
 const reviewSchema = require('./review.js');
 const requestSchema = require('./request.js');
+const reportSchema = require('./report.js');
 
 const linkSchema = gql`
   type Query {
@@ -29,4 +30,5 @@ module.exports = [
   errorsSchema,
   reviewSchema,
   requestSchema,
+  reportSchema,
 ];

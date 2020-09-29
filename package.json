@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "serve": "node src/index",
-    "start": "nodemon src/index.js"
+    "start": "node src/index.js"
   },
   "repository": {
     "type": "git",
@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/BuildForSDGCohort2/coffee-port-server#readme",
   "dependencies": {
+    "@sendgrid/mail": "^7.2.6",
     "apollo-server": "^2.16.1",
     "apollo-server-express": "^2.17.0",
     "bcrypt": "^5.0.0",
