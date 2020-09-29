@@ -160,4 +160,19 @@ module.exports = gql`
     message: String!
     type: String
   }
+
+  type UpdateProductRequestError implements Error {
+    message: String!
+    type: String
+  }
+
+  type GetRequestError implements Error {
+    message: String!
+    type: String
+  }
+
+  type RequestsError implements Error {
+    message: String!
+    type: String
+  }
 `;
