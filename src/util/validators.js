@@ -249,9 +249,16 @@ module.exports.validateProductInput = (product) => {
     ) {
       errors.group = 'Group must not be empty';
     }
-    if (product.uniqueAttributes.grade.trim() === '') {
+    if (product.uniqueAttributes.grade
+      && product.uniqueAttributes.grade.trim() === '') {
       errors.grade = 'Grade must not be empty';
     }
+
+    if (product.uniqueAttributes.flowerType
+      && product.uniqueAttributes.flowerType.trim() === '') {
+      errors.grade = 'flowerType must not be empty';
+    }
+
     if (
       product.uniqueAttributes.geographicalDesignation
       && product.uniqueAttributes.geographicalDesignation.trim() === ''

@@ -34,6 +34,7 @@ module.exports = gql`
     grade: String
     group: String
     uniqueName: String
+    flowerType: String
   }
 
   type DeleteProductPost {
@@ -86,6 +87,7 @@ module.exports = gql`
     grade: String
     group: String
     uniqueName: String
+    flowerType: String
   }
 
   input updateProductInput {

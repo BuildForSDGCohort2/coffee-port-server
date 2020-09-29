@@ -14,6 +14,7 @@ const productSchema = new Schema({
     grade: { type: String },
     group: { type: String },
     uniqueName: { type: String },
+    flowerType: { type: String },
   },
   user: {
     createdAt: String,
