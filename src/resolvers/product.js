@@ -7,8 +7,6 @@ const {
   isverified,
 } = require('./authorization.js');
 
-const { pubsub, EVENTS } = require('../subscription');
-
 const { validateProductInput } = require('../util/validators');
 
 module.exports = {
@@ -39,10 +37,7 @@ module.exports = {
           });
 
           const res = await newProduct.save();
-          console.log(EVENTS.REQUEST);
-          pubsub.publish(EVENTS.REQUEST.REQUESTED, {
-            productCreated: { ...res._doc, id: res._id },
-          });
+
           return {
             __typename: 'Product',
             ...res._doc,
@@ -128,12 +123,6 @@ module.exports = {
         }
       },
     ),
-  },
-
-  Subscription: {
-    productCreated: {
-      subscribe: () => pubsub.asyncIterator(EVENTS.REQUEST.REQUESTED),
-    },
   },
 
   Query: {

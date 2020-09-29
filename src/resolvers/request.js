@@ -1,6 +1,5 @@
 const { combineResolvers } = require('graphql-resolvers');
 
-const { pubsub, EVENTS } = require('../subscription');
 const { isAuthenitcated } = require('./authorization.js');
 
 module.exports = {
