@@ -30,7 +30,7 @@ module.exports = gql`
   }
 
   #results
-  union PostReportResult = Reported | UserDoesNotExist
+  union PostReportResult = Reported | PostReportError
   union ReportResult = Report | ReportDoesNotExist
   union ReportsResult = Reports | ReportsDoesNotExist
 

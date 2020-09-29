@@ -70,8 +70,8 @@ module.exports = {
           };
         } catch (err) {
           return {
-            __typename: 'UserDoesNotExist',
-            message: 'Error getting user',
+            __typename: 'PostReportError',
+            message: 'Error sending your report',
             type: `${err}`,
           };
         }

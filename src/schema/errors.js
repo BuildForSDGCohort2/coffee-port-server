@@ -25,6 +25,11 @@ module.exports = gql`
     type: String
   }
 
+  type PostReportError implements Error {
+    message: String!
+    type: String
+  }
+
   type ProductNotAddedError implements Error {
     message: String!
     type: String
