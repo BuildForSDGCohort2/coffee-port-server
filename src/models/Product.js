@@ -5,15 +5,16 @@ const productSchema = new Schema({
   productPrice: Number,
   productQuantity: Number,
   productMeasurementUnit: String,
-  purchased: { 
+  purchased: {
     type: Boolean,
-    default: false
+    default: false,
   },
   uniqueAttributes: {
     geographicalDesignation: { type: String },
     grade: { type: String },
     group: { type: String },
     uniqueName: { type: String },
+    flowerType: { type: String },
   },
   user: {
     createdAt: String,

@@ -4,6 +4,7 @@ const { combineResolvers } = require('graphql-resolvers');
 const {
   isAuthenitcated,
   isProductOwner,
+  isverified,
 } = require('./authorization.js');
 
 const { validateProductInput } = require('../util/validators');
@@ -12,6 +13,7 @@ module.exports = {
   Mutation: {
     postProduct: combineResolvers(
       isAuthenitcated,
+      isverified,
       async (
         _,
         { product },
@@ -94,6 +96,7 @@ module.exports = {
           }
 
           const { uniqueAttributes, ...args } = productToBeUpdated;
+          console.log(uniqueAttributes);
           const product = await Product.findByIdAndUpdate(id, args, { new: true });
           if (uniqueAttributes !== undefined) {
             const uniqueAttr = Object.entries(uniqueAttributes);
