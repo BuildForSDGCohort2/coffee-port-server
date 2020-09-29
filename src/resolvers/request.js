@@ -77,16 +77,7 @@ module.exports = {
 
           await productRequest.save();
 
-          const repon = await Request.findById(
-            productRequest._id,
-            (err, res) => {
-              if (err) {
-                console.log(err);
-              } else {
-                console.log(res);
-              }
-            },
-          )
+          const repon = await Request.findById(productRequest._id)
             .populate('requestedBy')
             .populate('requestedProduct')
             .exec();
@@ -148,7 +139,7 @@ module.exports = {
             request.requestStatus = requestStatus;
             request.acceptedByOrDeclinedBy = currentUser.id;
             const updatedRequest = await request.save();
-            console.log(updatedRequest);
+
             return {
               __typename: 'Request',
               ...updatedRequest._doc,

@@ -185,7 +185,6 @@ module.exports = {
             },
           );
 
-          console.log(test);
           return {
             __typename: 'Review',
             id: product.reviews[reviewIndex].id,

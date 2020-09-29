@@ -35,9 +35,7 @@ const sendVerificationMail = async ({ emails, token }) => {
   };
   try {
     await sgMail.send(msg);
-    console.log('email sent');
   } catch (err) {
-    console.log(err);
     throw new Error(err);
   }
 };
