@@ -56,7 +56,9 @@ module.exports = {
     async products(parent, _, { models: { Product } }) {
       try {
         const products = await Product.find();
-        return products.filter((product) => product.user.email === parent.email);
+        return products.filter(
+          (product) => product.user.email === parent.email,
+        );
       } catch (err) {
         return {
           __typename: 'GetProductsError',
@@ -319,12 +321,13 @@ module.exports = {
         await User.findByIdAndUpdate(id, { isVerified: true });
         return {
           __typename: 'VerifiedMessage',
-          message: 'you\'re email address has been verified',
+          message: "you're email address has been verified",
         };
       } catch (err) {
         return {
           __typename: 'TokenError',
-          message: 'wrong token',
+          message:
+            "you're token has expired, please login to you're account and request another confirmation",
           type: `${err}`,
         };
       }

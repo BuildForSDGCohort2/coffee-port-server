@@ -16,7 +16,7 @@ module.exports = gql`
     ): UpdatedUserResult!
     deleteUser(id: ID!): DeleteUserResult!
     signIn(email: String!, password: String!): SignInResult!
-    verifyUser(token:String!): VerifyResult!
+    verifyUser(token: String!): VerifyResult!
   }
 
   # custom types
@@ -30,7 +30,7 @@ module.exports = gql`
     phoneNumber: String!
     createdAt: String
     isVerified: Boolean
-    products:[Product!]
+    products: [Product!]
   }
 
   type Users {

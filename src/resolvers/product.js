@@ -96,7 +96,6 @@ module.exports = {
           }
 
           const { uniqueAttributes, ...args } = productToBeUpdated;
-          console.log(uniqueAttributes);
           const product = await Product.findByIdAndUpdate(id, args, { new: true });
           if (uniqueAttributes !== undefined) {
             const uniqueAttr = Object.entries(uniqueAttributes);
