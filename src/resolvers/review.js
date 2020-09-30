@@ -185,7 +185,6 @@ module.exports = {
             },
           );
 
-          console.log(test);
           return {
             __typename: 'Review',
             id: product.reviews[reviewIndex].id,
@@ -194,14 +193,6 @@ module.exports = {
             stars,
             comment,
           };
-
-          // product.reviews[reviewIndex] = updatedReview;
-          // console.log(product);
-          // product.save();
-          // return {
-          //   __typename: 'Review',
-          //   ...updatedReview,
-          // };
         } catch (err) {
           return {
             __typename: 'UpdateProductReviewError',

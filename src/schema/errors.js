@@ -25,6 +25,16 @@ module.exports = gql`
     type: String
   }
 
+  type ResendConfirmationError implements Error {
+    message: String!
+    type: String
+  }
+
+  type VerifiedUserError implements Error {
+    message: String!
+    type: String
+  }
+
   type PostReportError implements Error {
     message: String!
     type: String
@@ -172,6 +182,26 @@ module.exports = gql`
   }
 
   type UpdateProductReviewError implements Error {
+    message: String!
+    type: String
+  }
+
+  type CreateProductRequestError implements Error {
+    message: String!
+    type: String
+  }
+
+  type UpdateProductRequestError implements Error {
+    message: String!
+    type: String
+  }
+
+  type GetRequestError implements Error {
+    message: String!
+    type: String
+  }
+
+  type RequestsError implements Error {
     message: String!
     type: String
   }

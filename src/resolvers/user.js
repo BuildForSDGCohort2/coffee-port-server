@@ -314,13 +314,25 @@ module.exports = {
         };
       }
     },
-    verifyUser: async (_, { token }, { models: { User } }) => {
+    verifyUser: async (
+      _,
+      { token },
+      { models: { User }, currentUser, secret },
+    ) => {
       try {
+        if (currentUser.isVerified === true) {
+          return {
+            __typename: 'VerifiedUserError',
+            message: "You've already verified your email address!",
+          };
+        }
         const user = await jwt.verify(token, process.env.SECRET);
         const { id } = user;
         await User.findByIdAndUpdate(id, { isVerified: true });
+        console.log(await createToken(currentUser, secret, '30m'));
         return {
           __typename: 'VerifiedMessage',
+          token: await createToken(currentUser, secret, '30m'),
           message: "you're email address has been verified",
         };
       } catch (err) {
@@ -332,5 +344,37 @@ module.exports = {
         };
       }
     },
+    resendConfirmation: combineResolvers(
+      isAuthenitcated,
+      async (_, __, { currentUser, secret }) => {
+        try {
+          if (currentUser.isVerified === true) {
+            return {
+              __typename: 'VerifiedUserError',
+              message: "You've already verified your email address!",
+            };
+          }
+          const data = {
+            emails: [
+              currentUser.email,
+              currentUser.company.companyEmail,
+            ],
+            token: await createToken(currentUser, secret, '30m'),
+          };
+          sendVerificationMail(data);
+          return {
+            __typename: 'ResendConfirmation',
+            message: 'A new confirmation email been to sent to you',
+          };
+        } catch (err) {
+          return {
+            __typename: 'ResendConfirmationError',
+            message:
+              'Error Occured while trying to resend confiramtion email',
+            type: `${err}`,
+          };
+        }
+      },
+    ),
   },
 };

@@ -31,6 +31,14 @@ module.exports = {
               valid,
             };
           }
+          if (currentUser.role !== 'SUPPLIER') {
+            return {
+              __typename: 'ProductNotAddedError',
+              message:
+                'Your role need to be Supplier in order to post product',
+              type: 'ProductNotAddedError',
+            };
+          }
           const newProduct = new Product({
             ...product,
             user: currentUser,
@@ -96,7 +104,10 @@ module.exports = {
           }
 
           const { uniqueAttributes, ...args } = productToBeUpdated;
-          const product = await Product.findByIdAndUpdate(id, args, { new: true });
+
+          const product = await Product.findByIdAndUpdate(id, args, {
+            new: true,
+          });
           if (uniqueAttributes !== undefined) {
             const uniqueAttr = Object.entries(uniqueAttributes);
             uniqueAttr.forEach((array) => {
@@ -175,7 +186,9 @@ module.exports = {
     async purchasedProducts(_, { email }, { models: { Product } }) {
       try {
         const products = await Product.find({ 'user.email': email });
-        const purchasedProducts = products.filter((product) => product.purchased === true);
+        const purchasedProducts = products.filter(
+          (product) => product.purchased === true,
+        );
         const amount = purchasedProducts.length;
         return {
           __typename: 'PurchasedProducts',

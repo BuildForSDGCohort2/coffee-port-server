@@ -11,6 +11,7 @@ const isAuthenitcated = (_, __, { currentUser }) =>
     : {
         __typename: 'NotAuthenticatedUserError',
         message: 'not authenticated as a user',
+        type: 'NotAuthenticatedUserError',
       };
 
 const isProductOwner = async (

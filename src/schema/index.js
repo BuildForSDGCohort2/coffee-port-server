@@ -5,6 +5,7 @@ const productSchema = require('./product.js');
 const companySchema = require('./company.js');
 const errorsSchema = require('./errors.js');
 const reviewSchema = require('./review.js');
+const requestSchema = require('./request.js');
 const reportSchema = require('./report.js');
 
 const linkSchema = gql`
@@ -28,5 +29,6 @@ module.exports = [
   companySchema,
   errorsSchema,
   reviewSchema,
+  requestSchema,
   reportSchema,
 ];

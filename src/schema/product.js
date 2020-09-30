@@ -14,8 +14,9 @@ module.exports = gql`
   extend type Query {
     products(filter: String): ProductsResult
     product(id: ID!): ProductResult
-    purchasedProducts(email:String!): PurchasedProductsResult!
+    purchasedProducts(email: String!): PurchasedProductsResult!
   }
+
   # custom types
   type Product {
     id: ID!
@@ -44,7 +45,7 @@ module.exports = gql`
   type Products {
     products: [Product!]
   }
-  
+
   type PurchasedProducts {
     products: [Product!]
     amount: Int!
@@ -69,7 +70,7 @@ module.exports = gql`
     | UpdateProductError
     | ProductInputError
     | ProductOwnerError
-  union PurchasedProductsResult = 
+  union PurchasedProductsResult =
       PurchasedProducts
     | PurchasedProductsError
   # input types

@@ -17,6 +17,7 @@ module.exports = gql`
     deleteUser(id: ID!): DeleteUserResult!
     signIn(email: String!, password: String!): SignInResult!
     verifyUser(token: String!): VerifyResult!
+    resendConfirmation: ResendConfirmationResult!
   }
 
   # custom types
@@ -52,6 +53,11 @@ module.exports = gql`
   }
 
   type VerifiedMessage {
+    token: String!
+    message: String!
+  }
+
+  type ResendConfirmation {
     message: String!
   }
 
@@ -82,7 +88,15 @@ module.exports = gql`
 
   union UserResult = User | UserDoesNotExist
   union UsersResult = Users | UsersError
-  union VerifyResult = VerifiedMessage | TokenError
+  union VerifyResult =
+      VerifiedMessage
+    | TokenError
+    | VerifiedUserError
+
+  union ResendConfirmationResult =
+      ResendConfirmation
+    | ResendConfirmationError
+    | VerifiedUserError
   # inputs
   input SignUpUserInput {
     email: String!
