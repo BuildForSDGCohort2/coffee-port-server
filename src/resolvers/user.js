@@ -56,7 +56,9 @@ module.exports = {
     async products(parent, _, { models: { Product } }) {
       try {
         const products = await Product.find();
-        return products.filter((product) => product.user.email === parent.email);
+        return products.filter(
+          (product) => product.user.email === parent.email,
+        );
       } catch (err) {
         return {
           __typename: 'GetProductsError',
@@ -312,22 +314,66 @@ module.exports = {
         };
       }
     },
-    verifyUser: async (_, { token }, { models: { User } }) => {
+    verifyUser: async (
+      _,
+      { token },
+      { models: { User }, currentUser, secret },
+    ) => {
       try {
+        if (currentUser.isVerified === true) {
+          return {
+            __typename: 'VerifiedUserError',
+            message: "You've already verified your email address!",
+          };
+        }
         const user = await jwt.verify(token, process.env.SECRET);
         const { id } = user;
         await User.findByIdAndUpdate(id, { isVerified: true });
         return {
           __typename: 'VerifiedMessage',
-          message: 'you\'re email address has been verified',
+          token: await createToken(currentUser, secret, '30m'),
+          message: "you're email address has been verified",
         };
       } catch (err) {
         return {
           __typename: 'TokenError',
-          message: 'wrong token',
+          message:
+            "you're token has expired, please login to you're account and request another confirmation",
           type: `${err}`,
         };
       }
     },
+    resendConfirmation: combineResolvers(
+      isAuthenitcated,
+      async (_, __, { currentUser, secret }) => {
+        try {
+          if (currentUser.isVerified === true) {
+            return {
+              __typename: 'VerifiedUserError',
+              message: "You've already verified your email address!",
+            };
+          }
+          const data = {
+            emails: [
+              currentUser.email,
+              currentUser.company.companyEmail,
+            ],
+            token: await createToken(currentUser, secret, '30m'),
+          };
+          sendVerificationMail(data);
+          return {
+            __typename: 'ResendConfirmation',
+            message: 'A new confirmation email been to sent to you',
+          };
+        } catch (err) {
+          return {
+            __typename: 'ResendConfirmationError',
+            message:
+              'Error Occured while trying to resend confiramtion email',
+            type: `${err}`,
+          };
+        }
+      },
+    ),
   },
 };

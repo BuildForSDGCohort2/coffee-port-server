@@ -25,6 +25,16 @@ module.exports = gql`
     type: String
   }
 
+  type ResendConfirmationError implements Error {
+    message: String!
+    type: String
+  }
+
+  type VerifiedUserError implements Error {
+    message: String!
+    type: String
+  }
+
   type PostReportError implements Error {
     message: String!
     type: String
