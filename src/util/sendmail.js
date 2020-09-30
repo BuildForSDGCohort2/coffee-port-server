@@ -29,7 +29,7 @@ const sendVerificationMail = async ({ emails, token }) => {
     subject: 'Verification Email',
     text: 'zmblo text',
     html: `<p>We're sending you this email because you've just registered to coffee-port</p>,
-    <a href="https://coffee-port.netlify.app/confirm/${token}">click this to verify your email address</a>
+    <a href="https://localhost:3000/confirm/${token}">click this to verify your email address</a>
     <strong> if you're not aware of this email, please ignore it.`,
   };
   try {
