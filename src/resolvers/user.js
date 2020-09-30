@@ -329,7 +329,6 @@ module.exports = {
         const user = await jwt.verify(token, process.env.SECRET);
         const { id } = user;
         await User.findByIdAndUpdate(id, { isVerified: true });
-        console.log(await createToken(currentUser, secret, '30m'));
         return {
           __typename: 'VerifiedMessage',
           token: await createToken(currentUser, secret, '30m'),
