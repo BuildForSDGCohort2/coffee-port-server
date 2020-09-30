@@ -14,6 +14,7 @@ const requestSchema = new Schema({
   requestStatus: String,
   createdAt: String,
   acceptedByOrDeclinedBy: String,
+  inquiryText: String,
 });
 
 module.exports = model('Request', requestSchema);

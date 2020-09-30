@@ -124,7 +124,7 @@ module.exports = {
       async (
         _,
         { productId },
-        { models: { Request, Product }, currentUser },
+        { models: { Request, Product, inquiryText }, currentUser },
       ) => {
         try {
           // validate if product exists already
@@ -165,6 +165,7 @@ module.exports = {
             requestStatus: 'REQUESTED',
             requestedBy: currentUser.id,
             requestedProduct: productId,
+            inquiryText,
             createdAt: new Date().toISOString(),
           });
 
@@ -222,7 +223,7 @@ module.exports = {
       isAuthenitcated,
       async (
         _,
-        { requestId, requestStatus },
+        { requestId, requestStatus, inquiryText },
         { models: { Request }, currentUser },
       ) => {
         try {
@@ -253,6 +254,7 @@ module.exports = {
             request.requestStatus = requestStatus;
             request.acceptedByOrDeclinedBy = currentUser.id;
             request.createdAt = new Date().toISOString();
+            request.inquiryText = inquiryText;
             const updatedRequest = await request.save();
 
             return {
