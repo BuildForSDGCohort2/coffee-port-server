@@ -14,7 +14,7 @@ module.exports = gql`
   #queries
   extend type Query {
     request(requestId: ID!): RequestResult!
-    requests: RequestsResult!
+    requests(bySellerId: ID, byBuyerId: ID): RequestsResult!
   }
   #custom types
   type Request {
@@ -37,7 +37,7 @@ module.exports = gql`
 
   union UpdateProductRequestResult =
       Request
-    | GetProductError
+    | GetRequestError
     | NotAuthenticatedUserError
     | UpdateProductRequestError
 

@@ -17,7 +17,6 @@ const sendReportMail = async ({
   };
   try {
     await sgMail.send(msg);
-    console.log('email sent');
   } catch (err) {
     throw new Error(err);
   }

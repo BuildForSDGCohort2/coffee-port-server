@@ -31,6 +31,14 @@ module.exports = {
               valid,
             };
           }
+          if (currentUser.role !== 'SUPPLIER') {
+            return {
+              __typename: 'ProductNotAddedError',
+              message:
+                'Your role need to be Supplier in order to post product',
+              type: 'ProductNotAddedError',
+            };
+          }
           const newProduct = new Product({
             ...product,
             user: currentUser,
