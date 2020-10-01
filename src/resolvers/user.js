@@ -181,13 +181,19 @@ module.exports = {
       async (
         _,
         { id, updateUserInput },
-        { models: { User }, secret },
+        { models: { User }, currentUser, secret },
       ) => {
         try {
           const { userErrors, valid } = validateUpdateUserInput(
             updateUserInput,
           );
-
+          if (currentUser.id !== id && currentUser.role !== 'ADMIN') {
+            return {
+              __typename: 'AuthorizationError',
+              message:
+                "You can't make changes to another user's profile",
+            };
+          }
           if (!valid) {
             return {
               __typename: 'UserInputError',

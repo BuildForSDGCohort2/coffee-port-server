@@ -74,6 +74,7 @@ module.exports = gql`
     | TokenError
     | UpdateUserError
     | NotAuthenticatedUserError
+    | AuthorizationError
 
   union DeleteUserResult =
       DeletedUserMessage
