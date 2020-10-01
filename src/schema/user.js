@@ -53,7 +53,7 @@ module.exports = gql`
   }
 
   type VerifiedMessage {
-    token: String!
+    token: String
     message: String!
   }
 
