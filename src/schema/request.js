@@ -3,10 +3,14 @@ const { gql } = require('apollo-server-express');
 module.exports = gql`
   # mutations
   extend type Mutation {
-    createProductRequest(productId: ID!): CreateProductRequestResult!
+    createProductRequest(
+      productId: ID!
+      inquiryText: String
+    ): CreateProductRequestResult!
     updateProductRequest(
       requestId: ID!
       requestStatus: String!
+      inquiryText: String
     ): UpdateProductRequestResult!
 
     deleteProductRequest(requestId: ID!): String!
@@ -23,7 +27,8 @@ module.exports = gql`
     requestedBy: User!
     requestedProduct: Product!
     requestStatus: String!
-    acceptedByOrDeclinedBy: String
+    productOwner: User!
+    inquiryText: String
   }
   type Requests {
     requests: [Request!]

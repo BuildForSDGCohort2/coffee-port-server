@@ -2,36 +2,6 @@ const { combineResolvers } = require('graphql-resolvers');
 
 const { isAuthenitcated } = require('./authorization.js');
 
-function callback(alreadyRequested) {
-  if (alreadyRequested) {
-    return {
-      __typename: 'CreateProductRequestError',
-      message: 'Your have already sent request to this product',
-      type: 'CreateProductRequestError',
-    };
-  }
-}
-
-function checkIsAlreadyRequested(
-  requestModel,
-  requestedBy,
-  requestedProduct,
-  callback,
-) {
-  requestModel.findOne(
-    {
-      requestedBy,
-      requestedProduct,
-    },
-    (err, request) => {
-      let alreadyRequested = null;
-      if (request) {
-        alreadyRequested = request;
-        callback(alreadyRequested);
-      }
-    },
-  );
-}
 module.exports = {
   Query: {
     request: combineResolvers(
@@ -40,7 +10,8 @@ module.exports = {
         try {
           const request = await Request.findById(requestId)
             .populate('requestedBy')
-            .populate('requestedProduct');
+            .populate('requestedProduct')
+            .populate('productOwner');
           if (!request) {
             return {
               __typename: 'GetRequestError',
@@ -76,6 +47,7 @@ module.exports = {
               requestedBy: byBuyerId,
             })
               .populate('requestedBy')
+              .populate('productOwner')
               .populate('requestedProduct');
             return {
               __typename: 'Requests',
@@ -84,9 +56,10 @@ module.exports = {
           }
           if (bySellerId) {
             const requests = await Request.find({
-              acceptedByOrDeclinedBy: bySellerId,
+              productOwner: bySellerId,
             })
               .populate('requestedBy')
+              .populate('productOwner')
               .populate('requestedProduct');
             if (!requests) {
               return {
@@ -103,6 +76,7 @@ module.exports = {
           }
           const requests = await Request.find()
             .populate('requestedBy')
+            .populate('productOwner')
             .populate('requestedProduct');
           return {
             __typename: 'Requests',
@@ -124,7 +98,7 @@ module.exports = {
       async (
         _,
         { productId },
-        { models: { Request, Product }, currentUser },
+        { models: { Request, Product, inquiryText }, currentUser },
       ) => {
         try {
           // validate if product exists already
@@ -165,7 +139,9 @@ module.exports = {
             requestStatus: 'REQUESTED',
             requestedBy: currentUser.id,
             requestedProduct: productId,
+            inquiryText,
             createdAt: new Date().toISOString(),
+            productOwner: product.user,
           });
 
           await productRequest.save();
@@ -173,6 +149,7 @@ module.exports = {
           const repon = await Request.findById(productRequest._id)
             .populate('requestedBy')
             .populate('requestedProduct')
+            .populate('productOwner')
             .exec();
 
           return {
@@ -204,7 +181,7 @@ module.exports = {
             'requestedBy',
           );
           if (!request) {
-            return 'requested does not exist';
+            return 'requested product does not exist';
           }
           if (request._doc.requestedBy.email !== currentUser.email) {
             return 'Not authenticated as owner of request';
@@ -222,13 +199,14 @@ module.exports = {
       isAuthenitcated,
       async (
         _,
-        { requestId, requestStatus },
+        { requestId, requestStatus, inquiryText },
         { models: { Request }, currentUser },
       ) => {
         try {
           const request = await Request.findById(requestId)
             .populate('requestedBy')
             .populate('requestedProduct')
+            .populate('user')
             .exec();
           if (request) {
             if (
@@ -253,6 +231,7 @@ module.exports = {
             request.requestStatus = requestStatus;
             request.acceptedByOrDeclinedBy = currentUser.id;
             request.createdAt = new Date().toISOString();
+            request.inquiryText = inquiryText;
             const updatedRequest = await request.save();
 
             return {

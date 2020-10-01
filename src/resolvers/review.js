@@ -174,7 +174,7 @@ module.exports = {
 
           const updatedAt = new Date().toISOString();
 
-          const test = await Product.update(
+          await Product.update(
             { 'reviews.id': reviewId },
             {
               $set: {

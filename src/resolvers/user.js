@@ -238,7 +238,7 @@ module.exports = {
     ),
 
     deleteUser: combineResolvers(
-      isAdmin,
+      // isAdmin,
       async (_, { id }, { models: { User } }) => {
         try {
           await User.deleteOne({ _id: id });

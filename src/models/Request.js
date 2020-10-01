@@ -13,7 +13,12 @@ const requestSchema = new Schema({
   },
   requestStatus: String,
   createdAt: String,
-  acceptedByOrDeclinedBy: String,
+  productOwner: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  inquiryText: String,
 });
 
 module.exports = model('Request', requestSchema);
