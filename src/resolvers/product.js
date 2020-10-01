@@ -13,7 +13,7 @@ module.exports = {
   Mutation: {
     postProduct: combineResolvers(
       isAuthenitcated,
-      isverified,
+      // isverified,
       async (
         _,
         { product },
@@ -41,15 +41,19 @@ module.exports = {
           }
           const newProduct = new Product({
             ...product,
-            user: currentUser,
+            user: currentUser.id,
           });
 
           const res = await newProduct.save();
 
+          const prod = await Product.findById(res._doc._id).populate(
+            'user',
+          );
+
           return {
             __typename: 'Product',
-            ...res._doc,
-            id: res._id,
+            ...prod._doc,
+            id: res._doc._id,
           };
         } catch (err) {
           return {
@@ -107,7 +111,7 @@ module.exports = {
 
           const product = await Product.findByIdAndUpdate(id, args, {
             new: true,
-          });
+          }).populate('user');
           if (uniqueAttributes !== undefined) {
             const uniqueAttr = Object.entries(uniqueAttributes);
             uniqueAttr.forEach((array) => {
@@ -136,7 +140,7 @@ module.exports = {
   Query: {
     async products(_, { filter }, { models: { Product } }) {
       try {
-        const products = await Product.find();
+        const products = await Product.find().populate('user');
         if (!filter) {
           return {
             __typename: 'Products',
@@ -169,7 +173,7 @@ module.exports = {
 
     async product(_, { id }, { models: { Product } }) {
       try {
-        const product = await Product.findById(id);
+        const product = await Product.findById(id).populate('user');
         return {
           __typename: 'Product',
           ...product._doc,
@@ -185,9 +189,12 @@ module.exports = {
     },
     async purchasedProducts(_, { email }, { models: { Product } }) {
       try {
-        const products = await Product.find({ 'user.email': email });
+        const products = await Product.find().populate('user');
+
         const purchasedProducts = products.filter(
-          (product) => product.purchased === true,
+          (product) =>
+            product.purchased === true &&
+            product.user.email === email,
         );
         const amount = purchasedProducts.length;
         return {

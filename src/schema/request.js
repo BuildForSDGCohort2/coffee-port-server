@@ -27,7 +27,7 @@ module.exports = gql`
     requestedBy: User!
     requestedProduct: Product!
     requestStatus: String!
-    acceptedByOrDeclinedBy: String
+    productOwner: User!
     inquiryText: String
   }
   type Requests {

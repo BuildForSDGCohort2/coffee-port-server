@@ -17,23 +17,9 @@ const productSchema = new Schema({
     flowerType: { type: String },
   },
   user: {
-    createdAt: String,
-    email: String,
-    password: String,
-    role: String,
-    firstName: String,
-    lastName: String,
-    phoneNumber: String,
-    company: {
-      websiteUrl: { type: String },
-      companyName: { type: String },
-      companyEmail: { type: String },
-      address: {
-        country: { type: String },
-        city: { type: String },
-        postalCode: { type: String },
-      },
-    },
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
   },
   reviews: [
     {
