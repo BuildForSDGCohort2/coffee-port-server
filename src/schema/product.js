@@ -14,7 +14,7 @@ module.exports = gql`
   extend type Query {
     products(filter: String): ProductsResult
     product(id: ID!): ProductResult
-    purchasedProducts(email: String!): PurchasedProductsResult!
+    purchasedProducts(id: ID!): PurchasedProductsResult!
   }
 
   # custom types

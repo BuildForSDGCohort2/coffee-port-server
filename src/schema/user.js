@@ -53,7 +53,7 @@ module.exports = gql`
   }
 
   type VerifiedMessage {
-    token: String!
+    token: String
     message: String!
   }
 
@@ -74,6 +74,7 @@ module.exports = gql`
     | TokenError
     | UpdateUserError
     | NotAuthenticatedUserError
+    | AuthorizationError
 
   union DeleteUserResult =
       DeletedUserMessage

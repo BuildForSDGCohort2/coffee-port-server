@@ -181,13 +181,19 @@ module.exports = {
       async (
         _,
         { id, updateUserInput },
-        { models: { User }, secret },
+        { models: { User }, currentUser, secret },
       ) => {
         try {
           const { userErrors, valid } = validateUpdateUserInput(
             updateUserInput,
           );
-
+          if (currentUser.id !== id && currentUser.role !== 'ADMIN') {
+            return {
+              __typename: 'AuthorizationError',
+              message:
+                "You can't make changes to another user's profile",
+            };
+          }
           if (!valid) {
             return {
               __typename: 'UserInputError',
@@ -320,25 +326,31 @@ module.exports = {
       { models: { User }, currentUser, secret },
     ) => {
       try {
-        if (currentUser.isVerified === true) {
+        const user = await jwt.verify(token, process.env.SECRET);
+        if (user.isVerified === true) {
           return {
             __typename: 'VerifiedUserError',
             message: "You've already verified your email address!",
           };
         }
-        const user = await jwt.verify(token, process.env.SECRET);
         const { id } = user;
         await User.findByIdAndUpdate(id, { isVerified: true });
+        if (currentUser !== undefined) {
+          return {
+            __typename: 'VerifiedMessage',
+            token: await createToken(currentUser, secret, '30m'),
+            message: 'your email address has been verified',
+          };
+        }
         return {
           __typename: 'VerifiedMessage',
-          token: await createToken(currentUser, secret, '30m'),
-          message: "you're email address has been verified",
+          message: 'your email address has been verified',
         };
       } catch (err) {
         return {
           __typename: 'TokenError',
           message:
-            "you're token has expired, please login to you're account and request another confirmation",
+            'your token has expired, please login to your account and request another confirmation',
           type: `${err}`,
         };
       }
