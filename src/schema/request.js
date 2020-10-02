@@ -10,7 +10,6 @@ module.exports = gql`
     updateProductRequest(
       requestId: ID!
       requestStatus: String!
-      inquiryText: String
     ): UpdateProductRequestResult!
 
     deleteProductRequest(requestId: ID!): String!
@@ -33,6 +32,9 @@ module.exports = gql`
   type Requests {
     requests: [Request!]
   }
+  type UpdateRequestSuccess {
+    message: String!
+  }
   #results
   union CreateProductRequestResult =
       Request
@@ -41,7 +43,7 @@ module.exports = gql`
     | CreateProductRequestError
 
   union UpdateProductRequestResult =
-      Request
+      UpdateRequestSuccess
     | GetRequestError
     | NotAuthenticatedUserError
     | UpdateProductRequestError

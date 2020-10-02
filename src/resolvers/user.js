@@ -335,7 +335,7 @@ module.exports = {
         }
         const { id } = user;
         await User.findByIdAndUpdate(id, { isVerified: true });
-        if (currentUser !== undefined) {
+        if (currentUser) {
           return {
             __typename: 'VerifiedMessage',
             token: await createToken(currentUser, secret, '30m'),

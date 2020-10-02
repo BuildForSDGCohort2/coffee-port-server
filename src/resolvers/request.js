@@ -101,7 +101,7 @@ module.exports = {
         { models: { Request, Product, inquiryText }, currentUser },
       ) => {
         try {
-          // validate if product exists already
+          // validate if product exists
           const product = await Product.findById(productId);
 
           if (!product) {
@@ -199,20 +199,14 @@ module.exports = {
       isAuthenitcated,
       async (
         _,
-        { requestId, requestStatus, inquiryText },
+        { requestId, requestStatus },
         { models: { Request }, currentUser },
       ) => {
         try {
-          const request = await Request.findById(requestId)
-            .populate('requestedBy')
-            .populate('requestedProduct')
-            .populate('user')
-            .exec();
+          const request = await Request.findById(requestId);
+
           if (request) {
-            if (
-              request.requestedProduct.user.email !==
-              currentUser.email
-            ) {
+            if (request.productOwner !== currentUser.id) {
               return {
                 __typename: 'UpdateProductRequestError',
                 type: 'UpdateProductRequestError',
@@ -220,24 +214,14 @@ module.exports = {
                   'Your are not the owner of the product the request is sent for',
               };
             }
-            if (currentUser.role !== 'SUPPLIER') {
-              return {
-                __typename: 'UpdateProductRequestError',
-                type: 'UpdateProductRequestError',
-                message:
-                  'You must be Supplier to update this request',
-              };
-            }
+
             request.requestStatus = requestStatus;
-            request.acceptedByOrDeclinedBy = currentUser.id;
             request.createdAt = new Date().toISOString();
-            request.inquiryText = inquiryText;
-            const updatedRequest = await request.save();
+            await request.save();
 
             return {
-              __typename: 'Request',
-              ...updatedRequest._doc,
-              id: updatedRequest._doc._id,
+              __typename: 'UpdateRequestSuccess',
+              message: 'Successfuly updated request',
             };
           }
           return {
