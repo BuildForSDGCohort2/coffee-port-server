@@ -97,8 +97,8 @@ module.exports = {
       isAuthenitcated,
       async (
         _,
-        { productId },
-        { models: { Request, Product, inquiryText }, currentUser },
+        { productId, inquiryText },
+        { models: { Request, Product }, currentUser },
       ) => {
         try {
           // validate if product exists already
@@ -204,30 +204,29 @@ module.exports = {
       ) => {
         try {
           const request = await Request.findById(requestId);
-
-          if (request) {
-            if (request.productOwner !== currentUser.id) {
-              return {
-                __typename: 'UpdateProductRequestError',
-                type: 'UpdateProductRequestError',
-                message:
-                  'Your are not the owner of the product the request is sent for',
-              };
-            }
-
-            request.requestStatus = requestStatus;
-            request.createdAt = new Date().toISOString();
-            await request.save();
-
+          if (!request) {
             return {
-              __typename: 'UpdateRequestSuccess',
-              message: 'Successfuly updated request',
+              __typename: 'GetRequestError',
+              type: 'GetRequestError',
+              message: 'Request does not exist',
             };
           }
+          if (request.productOwner.toString() !== currentUser.id) {
+            return {
+              __typename: 'UpdateProductRequestError',
+              type: 'UpdateProductRequestError',
+              message:
+                'Your are not the owner of the product the request is sent for',
+            };
+          }
+
+          request.requestStatus = requestStatus;
+          request.createdAt = new Date().toISOString();
+          await request.save();
+
           return {
-            __typename: 'GetRequestError',
-            type: 'GetRequestError',
-            message: 'Request does not exist',
+            __typename: 'UpdateRequestSuccess',
+            message: 'Successfuly updated request',
           };
         } catch (err) {
           return {

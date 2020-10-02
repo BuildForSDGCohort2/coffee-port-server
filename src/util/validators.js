@@ -34,6 +34,12 @@ module.exports.validateSignUpInput = (
 
   if (phoneNumber.trim() === '') {
     errors.phoneNumber = 'Phone number  must not be empty';
+  } else {
+    const phoneRegex = /^\+(?:[0-9] ?){6,14}[0-9]$/;
+    if (!phoneRegex.test(phoneNumber) || phoneNumber.length > 13) {
+      errors.phoneNumber =
+        'Error input, please enter a valid phone number!';
+    }
   }
 
   if (city.trim() === '') {
