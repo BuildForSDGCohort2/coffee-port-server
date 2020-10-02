@@ -18,7 +18,9 @@ module.exports = gql`
       productId: String!
       newReview: ReviewInput!
     ): UpdateProductReviewResult!
-
+  }
+  extend type Query {
+    ProductReview(productId: ID!): ProductReviewResult
   }
 
   # custom types
@@ -33,6 +35,9 @@ module.exports = gql`
     message: String!
   }
 
+  type Reviews {
+    reviews: [Review!]
+  }
 
   #results
   union PostProductReviewResult =
@@ -57,6 +62,7 @@ module.exports = gql`
     | UpdateProductReviewError
     | ReviewInputErrors
 
+  union ProductReviewResult = Reviews | GetProductError
 
   # input types
   input ReviewInput {
