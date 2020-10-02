@@ -68,10 +68,16 @@ module.exports = {
     deleteProductPost: combineResolvers(
       isAuthenitcated,
       isProductOwner,
-      async (_, { id }, { models: { Product } }) => {
+      async (_, { id }, { models: { Product, Request } }) => {
         try {
           const product = await Product.findById(id);
-
+          // check if product has any associated requests
+          const request = await Request.findOne({
+            requestedProduct: product.id,
+          });
+          if (request) {
+            await request.delete();
+          }
           await product.delete();
           return {
             __typename: 'DeleteProductPost',

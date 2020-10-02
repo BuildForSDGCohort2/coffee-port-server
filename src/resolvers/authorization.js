@@ -19,7 +19,7 @@ const isProductOwner = async (
   { id },
   { models: { Product }, currentUser },
 ) => {
-  const product = await Product.findById(id);
+  const product = await Product.findById(id).populate('user');
   if (!product) {
     return {
       __typename: 'ProductOwnerError',
@@ -46,9 +46,11 @@ const isAdmin = combineResolvers(
 const isverified = combineResolvers(
   isAuthenitcated,
   (_, __, { currentUser: { isVerified } }) =>
-  isVerified === true
+    isVerified === true
       ? skip
-      : new ForbiddenError('Not a verified user, please check your email to verify your email address.'),
+      : new ForbiddenError(
+          'Not a verified user, please check your email to verify your email address.',
+        ),
 );
 module.exports = {
   isAuthenitcated,
