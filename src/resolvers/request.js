@@ -101,7 +101,7 @@ module.exports = {
         { models: { Request, Product }, currentUser },
       ) => {
         try {
-          // validate if product exists already
+          // validate if product exists
           const product = await Product.findById(productId);
 
           if (!product) {
