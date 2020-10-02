@@ -97,8 +97,8 @@ module.exports = {
       isAuthenitcated,
       async (
         _,
-        { productId },
-        { models: { Request, Product, inquiryText }, currentUser },
+        { productId, inquiryText },
+        { models: { Request, Product }, currentUser },
       ) => {
         try {
           // validate if product exists already
