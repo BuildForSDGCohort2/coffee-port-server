@@ -193,14 +193,14 @@ module.exports = {
         };
       }
     },
-    async purchasedProducts(_, { email }, { models: { Product } }) {
+    async purchasedProducts(_, { id }, { models: { Product } }) {
       try {
-        const products = await Product.find().populate('user');
+        const products = await Product.find({ user: id }).populate(
+          'user',
+        );
 
         const purchasedProducts = products.filter(
-          (product) =>
-            product.purchased === true &&
-            product.user.email === email,
+          (product) => product.purchased === true,
         );
         const amount = purchasedProducts.length;
         return {

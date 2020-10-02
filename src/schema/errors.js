@@ -95,6 +95,11 @@ module.exports = gql`
     valid: Boolean!
   }
 
+  type AuthorizationError implements Error {
+    message: String!
+    type: String
+  }
+
   type UserInputErrors {
     email: String
     password: String
