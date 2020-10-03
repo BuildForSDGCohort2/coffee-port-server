@@ -76,6 +76,17 @@ module.exports = {
       );
       return purchasedProducts.length;
     },
+    async productsType(parent, _, { models: { Product } }) {
+      let products = await Product.find();
+      products = products.filter(
+        (product) => product.user.toString() === parent.id,
+      );
+      const totalType = new Set();
+      products.forEach((product) =>
+        totalType.add(product.productName),
+      );
+      return totalType.size;
+    },
   },
 
   Mutation: {
