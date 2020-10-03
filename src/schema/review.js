@@ -32,10 +32,6 @@ module.exports = gql`
     message: String!
   }
 
-  type Reviews {
-    reviews: [Review!]
-  }
-
   #results
   union PostProductReviewResult =
       Review
