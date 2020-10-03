@@ -57,7 +57,7 @@ module.exports = {
       try {
         const products = await Product.find();
         return products.filter(
-          (product) => product.user.email === parent.email,
+          (product) => product.user.toString() === parent.id,
         );
       } catch (err) {
         return {
@@ -245,8 +245,9 @@ module.exports = {
 
     deleteUser: combineResolvers(
       // isAdmin,
-      async (_, { id }, { models: { User } }) => {
+      async (_, { id }, { models: { User, Product } }) => {
         try {
+          await Product.deleteMany({ user: id });
           await User.deleteOne({ _id: id });
           return {
             __typename: 'DeletedUserMessage',
@@ -335,7 +336,7 @@ module.exports = {
         }
         const { id } = user;
         await User.findByIdAndUpdate(id, { isVerified: true });
-        if (currentUser) {
+        if (currentUser !== undefined) {
           return {
             __typename: 'VerifiedMessage',
             token: await createToken(currentUser, secret, '30m'),
