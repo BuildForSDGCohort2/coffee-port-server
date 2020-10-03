@@ -146,16 +146,11 @@ module.exports = {
   Query: {
     async products(_, { filter }, { models: { Product } }) {
       try {
-        const products = await Product.find().populate(
-          'user',
-          'firstName lastName id email',
-        );
-        console.log(products);
+        const products = await Product.find().populate('user');
         if (!filter) {
           return {
             __typename: 'Products',
             products,
-            user: products.filter((product) => product.user),
           };
         }
         return {

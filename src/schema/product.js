@@ -20,7 +20,7 @@ module.exports = gql`
   # custom types
   type Product {
     id: ID!
-    user: User
+    user: User!
     productName: String!
     productMeasurementUnit: String!
     productQuantity: Int!

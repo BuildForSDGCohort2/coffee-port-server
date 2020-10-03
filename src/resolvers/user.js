@@ -245,8 +245,9 @@ module.exports = {
 
     deleteUser: combineResolvers(
       // isAdmin,
-      async (_, { id }, { models: { User } }) => {
+      async (_, { id }, { models: { User, Product } }) => {
         try {
+          await Product.deleteMany({ user: id });
           await User.deleteOne({ _id: id });
           return {
             __typename: 'DeletedUserMessage',
