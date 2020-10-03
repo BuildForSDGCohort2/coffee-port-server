@@ -13,7 +13,7 @@ module.exports = {
   Mutation: {
     postProduct: combineResolvers(
       isAuthenitcated,
-      // isverified,
+      isverified,
       async (
         _,
         { product },
@@ -146,27 +146,25 @@ module.exports = {
   Query: {
     async products(_, { filter }, { models: { Product } }) {
       try {
-        const products = await Product.find().populate('user');
+        const products = await Product.find().populate(
+          'user',
+          'firstName lastName id email',
+        );
+        console.log(products);
         if (!filter) {
           return {
             __typename: 'Products',
             products,
+            user: products.filter((product) => product.user),
           };
         }
         return {
           __typename: 'Products',
-          products: products.filter((product) => {
-            const productName = product.productName
+          products: products.filter((product) =>
+            product.productName
               .toLowerCase()
-              .includes(filter);
-            const group = product.uniqueAttributes.group
-              .toLowerCase()
-              .includes(filter);
-            const uniqueName = product.uniqueAttributes.uniqueName
-              .toLowerCase()
-              .includes(filter);
-            return productName || group || uniqueName;
-          }),
+              .includes(filter.toLowerCase()),
+          ),
         };
       } catch (err) {
         return {

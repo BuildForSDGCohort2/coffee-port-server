@@ -19,9 +19,6 @@ module.exports = gql`
       newReview: ReviewInput!
     ): UpdateProductReviewResult!
   }
-  extend type Query {
-    ProductReview(productId: ID!): ProductReviewResult
-  }
 
   # custom types
   type Review {
@@ -61,8 +58,6 @@ module.exports = gql`
     | ReviewOwnerError
     | UpdateProductReviewError
     | ReviewInputErrors
-
-  union ProductReviewResult = Reviews | GetProductError
 
   # input types
   input ReviewInput {

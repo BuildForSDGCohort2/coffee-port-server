@@ -57,7 +57,7 @@ module.exports = {
       try {
         const products = await Product.find();
         return products.filter(
-          (product) => product.user.email === parent.email,
+          (product) => product.user.toString() === parent.id,
         );
       } catch (err) {
         return {
@@ -335,7 +335,7 @@ module.exports = {
         }
         const { id } = user;
         await User.findByIdAndUpdate(id, { isVerified: true });
-        if (currentUser) {
+        if (currentUser !== undefined) {
           return {
             __typename: 'VerifiedMessage',
             token: await createToken(currentUser, secret, '30m'),
