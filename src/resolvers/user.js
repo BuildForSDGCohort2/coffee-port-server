@@ -67,6 +67,26 @@ module.exports = {
         };
       }
     },
+    async totalSale(parent, _, { models: { Product } }) {
+      const products = await Product.find();
+      const purchasedProducts = products.filter(
+        (product) =>
+          product.user.toString() === parent.id &&
+          product.purchased === true,
+      );
+      return purchasedProducts.length;
+    },
+    async productsType(parent, _, { models: { Product } }) {
+      let products = await Product.find();
+      products = products.filter(
+        (product) => product.user.toString() === parent.id,
+      );
+      const totalType = new Set();
+      products.forEach((product) =>
+        totalType.add(product.productName),
+      );
+      return totalType.size;
+    },
   },
 
   Mutation: {
