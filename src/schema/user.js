@@ -33,7 +33,7 @@ module.exports = gql`
     isVerified: Boolean
     products: [Product!]
     totalSale: Int
-    productsType: Int!
+    productsType: [String!]
   }
 
   type Users {
