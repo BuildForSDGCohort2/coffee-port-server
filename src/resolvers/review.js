@@ -6,6 +6,26 @@ const { isAuthenitcated } = require('./authorization.js');
 const { validateReview } = require('../util/validators');
 
 module.exports = {
+  Query: {
+    async ProductReview(
+      _,
+      { productId: id },
+      { models: { Product } },
+    ) {
+      try {
+        const product = await Product.findById(id);
+        return {
+          __typename: 'Reviews',
+          reviews: product.reviews,
+        };
+      } catch (err) {
+        return {
+          __typename: 'GetProductError',
+          message: 'unable to get products',
+        };
+      }
+    },
+  },
   Mutation: {
     postProductReview: combineResolvers(
       isAuthenitcated,

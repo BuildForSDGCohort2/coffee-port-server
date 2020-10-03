@@ -19,6 +19,10 @@ module.exports = gql`
       newReview: ReviewInput!
     ): UpdateProductReviewResult!
   }
+  # query
+  extend type Query {
+    ProductReview(productId: ID!): ProductReviewResult
+  }
 
   # custom types
   type Review {
@@ -28,11 +32,17 @@ module.exports = gql`
     stars: Float!
     createdAt: String!
   }
+
+  type Reviews {
+    reviews: [Review!]
+  }
+
   type DeleteProductReview {
     message: String!
   }
 
   #results
+  union ProductReviewResult = Reviews | GetProductError
   union PostProductReviewResult =
       Review
     | ReviewNotAddedError
