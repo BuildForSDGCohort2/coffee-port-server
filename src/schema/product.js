@@ -24,6 +24,7 @@ module.exports = gql`
     productName: String!
     productMeasurementUnit: String!
     productQuantity: Int!
+    productDescription: String
     uniqueAttributes: ProductUniqueAttributes!
     productPrice: Float!
     purchased: Boolean
@@ -76,6 +77,7 @@ module.exports = gql`
   # input types
   input ProductInput {
     productName: String!
+    productDescription: String
     uniqueAttributes: ProductUniqueAttributesInput!
     productPrice: Float!
     productMeasurementUnit: String!
@@ -93,6 +95,7 @@ module.exports = gql`
 
   input updateProductInput {
     productName: String
+    productDescription: String
     productMeasurementUnit: String
     productQuantity: Int
     productPrice: Float

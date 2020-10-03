@@ -5,6 +5,7 @@ const productSchema = new Schema({
   productPrice: Number,
   productQuantity: Number,
   productMeasurementUnit: String,
+  productDescription: String,
   purchased: {
     type: Boolean,
     default: false,
