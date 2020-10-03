@@ -85,7 +85,9 @@ module.exports = {
       products.forEach((product) =>
         totalType.add(product.productName),
       );
-      return totalType.size;
+      const types = [];
+      totalType.forEach((name) => types.push(name));
+      return types;
     },
   },
 
