@@ -67,6 +67,15 @@ module.exports = {
         };
       }
     },
+    async totalSale(parent, _, { models: { Product } }) {
+      const products = await Product.find();
+      const purchasedProducts = products.filter(
+        (product) =>
+          product.user.toString() === parent.id &&
+          product.purchased === true,
+      );
+      return purchasedProducts.length;
+    },
   },
 
   Mutation: {
