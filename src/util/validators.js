@@ -264,6 +264,13 @@ module.exports.validateProductInput = (product) => {
   }
 
   if (
+    product.productDescription &&
+    product.productDescription.trim() === ''
+  ) {
+    errors.productDescription = 'Product description must not be empty';
+  }
+
+  if (
     product.productMeasurementUnit &&
     product.productMeasurementUnit.trim() === ''
   ) {
