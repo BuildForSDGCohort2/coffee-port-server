@@ -13,7 +13,7 @@ module.exports = {
   Mutation: {
     postProduct: combineResolvers(
       isAuthenitcated,
-      isverified,
+      // isverified,
       async (
         _,
         { product },

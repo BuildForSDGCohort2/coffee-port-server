@@ -40,9 +40,12 @@ module.exports = {
   Mutation: {
     reportUsers: combineResolvers(
       isAuthenitcated,
-      isverified,
-      async (_, { reportedUser: { id }, reportMessage },
-        { models: { User, Report }, currentUser }) => {
+      // isverified,
+      async (
+        _,
+        { reportedUser: { id }, reportMessage },
+        { models: { User, Report }, currentUser },
+      ) => {
         try {
           const emails = [];
           const user = await User.findById(id);
