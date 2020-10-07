@@ -12,7 +12,7 @@
 6. raise a pull request when you want your code to be merged to develop branch
 7. run **npm start** to start node server.
 
-## Inspriration
+## Inspiration
 
 A couple of years ago, our country was suffering from a very high shortage of foreign currency. To the point where many infrastructure projects almost came to a halt. The country was slowly depleting its reserve. 
 On the other hand, we had farmers who produce a lot of cash crops and animal products that are in high demand in foreign markets. It was common to see farmers selling their products for cheaper than their market value just to get enough money to buy seeds and fertilizer for the next season. Sometimes even shifting to planting the common teff and maize, which have high demand in local markets. 
