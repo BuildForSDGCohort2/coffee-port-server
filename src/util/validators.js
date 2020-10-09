@@ -248,30 +248,38 @@ module.exports.validateProductInput = (product) => {
     productName,
     productPrice,
     productQuantity,
-    productDescription,
     productMeasurementUnit,
   } = product;
 
-  if (productName && productName.trim() === '') {
+  if (productName.trim() === '' || productName.length <= 1) {
     errors.ProductName = 'Product name must not be empty';
   }
 
-  if (productPrice && (typeof productPrice !== 'number')) {
+  if (
+    typeof productPrice !== 'number' ||
+    Math.sign(productPrice) !== 1
+  ) {
     errors.productPrice = 'please enter a valid number';
   }
 
-  if (productQuantity && (typeof productQuantity !== 'number' || Math.sign(productQuantity) === -1)) {
+  if (
+    typeof productQuantity !== 'number' ||
+    Math.sign(productQuantity) !== 1
+  ) {
     errors.productQuantity = 'please enter a valid number';
   }
 
-  if (productDescription && productDescription.trim() === '') {
+  if (
+    product.productDescription &&
+    product.productDescription.trim() === ''
+  ) {
     errors.productDescription =
       'Product description must not be empty';
   }
 
   if (
-    productMeasurementUnit &&
-    productMeasurementUnit.trim() === ''
+    productMeasurementUnit.trim() === '' ||
+    productMeasurementUnit.length <= 1
   ) {
     errors.productMeasurementUnit =
       'Product measurement unit must not be empty';
