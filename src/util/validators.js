@@ -251,7 +251,7 @@ module.exports.validateProductInput = (product) => {
     productMeasurementUnit,
   } = product;
 
-  if (productName.trim() === '' || productName.length <= 1) {
+  if (productName.trim() === '') {
     errors.ProductName = 'Product name must not be empty';
   }
 
@@ -277,10 +277,7 @@ module.exports.validateProductInput = (product) => {
       'Product description must not be empty';
   }
 
-  if (
-    productMeasurementUnit.trim() === '' ||
-    productMeasurementUnit.length <= 1
-  ) {
+  if (productMeasurementUnit.trim() === '') {
     errors.productMeasurementUnit =
       'Product measurement unit must not be empty';
   }
