@@ -244,23 +244,29 @@ module.exports.validateReview = (comment) => {
 
 module.exports.validateProductInput = (product) => {
   const errors = {};
+  const {
+    productName,
+    productPrice,
+    productQuantity,
+    productMeasurementUnit,
+  } = product;
 
-  if (product.productName && product.productName.trim() === '') {
+  if (productName.trim() === '' || productName.length <= 1) {
     errors.ProductName = 'Product name must not be empty';
   }
 
   if (
-    product.productPrice &&
-    typeof product.productPrice !== 'number'
+    typeof productPrice !== 'number' ||
+    Math.sign(productPrice) !== 1
   ) {
-    errors.productPrice = 'Product price must not be empty';
+    errors.productPrice = 'please enter a valid number';
   }
 
   if (
-    product.productQuantity &&
-    typeof product.productQuantity !== 'number'
+    typeof productQuantity !== 'number' ||
+    Math.sign(productQuantity) !== 1
   ) {
-    errors.productQuantity = 'Product quantity must not be empty';
+    errors.productQuantity = 'please enter a valid number';
   }
 
   if (
@@ -272,8 +278,8 @@ module.exports.validateProductInput = (product) => {
   }
 
   if (
-    product.productMeasurementUnit &&
-    product.productMeasurementUnit.trim() === ''
+    productMeasurementUnit.trim() === '' ||
+    productMeasurementUnit.length <= 1
   ) {
     errors.productMeasurementUnit =
       'Product measurement unit must not be empty';

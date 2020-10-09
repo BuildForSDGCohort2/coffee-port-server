@@ -20,12 +20,12 @@ module.exports = gql`
   # custom types
   type Product {
     id: ID!
-    user: User!
+    user: User
     productName: String!
     productMeasurementUnit: String!
     productQuantity: Int!
     productDescription: String
-    uniqueAttributes: ProductUniqueAttributes!
+    uniqueAttributes: ProductUniqueAttributes
     productPrice: Float!
     purchased: Boolean
     reviews: [Review!]
@@ -78,7 +78,7 @@ module.exports = gql`
   input ProductInput {
     productName: String!
     productDescription: String
-    uniqueAttributes: ProductUniqueAttributesInput!
+    uniqueAttributes: ProductUniqueAttributesInput
     productPrice: Float!
     productMeasurementUnit: String!
     productQuantity: Int!
