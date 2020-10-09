@@ -31,7 +31,7 @@ module.exports = {
       isAuthenitcated,
       async (
         _,
-        { id, review: { comment, stars } },
+        { productId: id, review: { comment, stars } },
         { models: { Product }, currentUser: { email } },
       ) => {
         try {
@@ -47,7 +47,7 @@ module.exports = {
             };
           }
 
-          const product = await Product.findOne({ id });
+          const product = await Product.findById(id);
 
           if (!product) {
             return {
