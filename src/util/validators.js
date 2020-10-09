@@ -244,35 +244,34 @@ module.exports.validateReview = (comment) => {
 
 module.exports.validateProductInput = (product) => {
   const errors = {};
+  const {
+    productName,
+    productPrice,
+    productQuantity,
+    productDescription,
+    productMeasurementUnit,
+  } = product;
 
-  if (product.productName && product.productName.trim() === '') {
+  if (productName && productName.trim() === '') {
     errors.ProductName = 'Product name must not be empty';
   }
 
-  if (
-    product.productPrice &&
-    typeof product.productPrice !== 'number'
-  ) {
-    errors.productPrice = 'Product price must not be empty';
+  if (productPrice && (typeof productPrice !== 'number')) {
+    errors.productPrice = 'please enter a valid number';
+  }
+
+  if (productQuantity && (typeof productQuantity !== 'number' || Math.sign(productQuantity) === -1)) {
+    errors.productQuantity = 'please enter a valid number';
+  }
+
+  if (productDescription && productDescription.trim() === '') {
+    errors.productDescription =
+      'Product description must not be empty';
   }
 
   if (
-    product.productQuantity &&
-    typeof product.productQuantity !== 'number'
-  ) {
-    errors.productQuantity = 'Product quantity must not be empty';
-  }
-
-  if (
-    product.productDescription &&
-    product.productDescription.trim() === ''
-  ) {
-    errors.productDescription = 'Product description must not be empty';
-  }
-
-  if (
-    product.productMeasurementUnit &&
-    product.productMeasurementUnit.trim() === ''
+    productMeasurementUnit &&
+    productMeasurementUnit.trim() === ''
   ) {
     errors.productMeasurementUnit =
       'Product measurement unit must not be empty';
