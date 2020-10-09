@@ -57,7 +57,8 @@ module.exports = {
       try {
         const products = await Product.find();
         return products.filter(
-          (product) => product.user.toString() === parent.id,
+          (product) =>
+            product.user.toString() === parent.id.toString(),
         );
       } catch (err) {
         return {
@@ -71,7 +72,7 @@ module.exports = {
       const products = await Product.find();
       const purchasedProducts = products.filter(
         (product) =>
-          product.user.toString() === parent.id &&
+          product.user.toString() === parent.id.toString() &&
           product.purchased === true,
       );
       return purchasedProducts.length;
@@ -79,7 +80,7 @@ module.exports = {
     async productsType(parent, _, { models: { Product } }) {
       let products = await Product.find();
       products = products.filter(
-        (product) => product.user.toString() === parent.id,
+        (product) => product.user.toString() === parent.id.toString(),
       );
       const totalType = new Set();
       products.forEach((product) =>

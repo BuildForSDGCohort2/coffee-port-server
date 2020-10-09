@@ -25,7 +25,7 @@ module.exports = gql`
     productMeasurementUnit: String!
     productQuantity: Int!
     productDescription: String
-    uniqueAttributes: ProductUniqueAttributes!
+    uniqueAttributes: ProductUniqueAttributes
     productPrice: Float!
     purchased: Boolean
     reviews: [Review!]
