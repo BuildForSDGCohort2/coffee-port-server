@@ -19,6 +19,8 @@ const requestSchema = new Schema({
     required: true,
   },
   inquiryText: String,
+  seenByRequester: String,
+  seenByProductOwner: String
 });
 
 module.exports = model('Request', requestSchema);

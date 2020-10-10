@@ -13,6 +13,7 @@ module.exports = gql`
     ): UpdateProductRequestResult!
 
     deleteProductRequest(requestId: ID!): String!
+    updateSeenStatus(requestId: ID!, isProductOwner: Boolean!): String!
   }
   #queries
   extend type Query {
@@ -28,6 +29,8 @@ module.exports = gql`
     requestStatus: String!
     productOwner: User
     inquiryText: String
+    seenByRequester: String
+    seenByProductOwner: String
   }
   type Requests {
     requests: [Request!]
