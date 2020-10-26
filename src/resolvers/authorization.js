@@ -11,6 +11,7 @@ const isAuthenitcated = (_, __, { currentUser }) =>
     : {
         __typename: 'NotAuthenticatedUserError',
         message: 'not authenticated as a user',
+        type: 'NotAuthenticatedUserError',
       };
 
 const isProductOwner = async (
@@ -18,7 +19,7 @@ const isProductOwner = async (
   { id },
   { models: { Product }, currentUser },
 ) => {
-  const product = await Product.findById(id);
+  const product = await Product.findById(id).populate('user');
   if (!product) {
     return {
       __typename: 'ProductOwnerError',
@@ -41,4 +42,19 @@ const isAdmin = combineResolvers(
       ? skip
       : new ForbiddenError('Not authorized as admin.'),
 );
-module.exports = { isAuthenitcated, isProductOwner, isAdmin };
+
+const isverified = combineResolvers(
+  isAuthenitcated,
+  (_, __, { currentUser: { isVerified } }) =>
+    isVerified === true
+      ? skip
+      : new ForbiddenError(
+          'Not a verified user, please check your email to verify your email address.',
+        ),
+);
+module.exports = {
+  isAuthenitcated,
+  isProductOwner,
+  isAdmin,
+  isverified,
+};

@@ -1,7 +1,7 @@
 {
   "name": "coffee-port-server",
   "version": "1.0.0",
-  "description": "this is server app for kdame-gebeya e-commerce web app",
+  "description": "this is server app for coffee-port",
   "main": "index.js",
   "scripts": {
     "serve": "node src/index",
@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/BuildForSDGCohort2/coffee-port-server#readme",
   "dependencies": {
+    "@sendgrid/mail": "^7.2.6",
     "apollo-server": "^2.16.1",
     "apollo-server-express": "^2.17.0",
     "bcrypt": "^5.0.0",

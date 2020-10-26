@@ -5,35 +5,31 @@ const productSchema = new Schema({
   productPrice: Number,
   productQuantity: Number,
   productMeasurementUnit: String,
+  productDescription: String,
+  purchased: {
+    type: Boolean,
+    default: false,
+  },
   uniqueAttributes: {
     geographicalDesignation: { type: String },
     grade: { type: String },
     group: { type: String },
     uniqueName: { type: String },
+    flowerType: { type: String },
   },
   user: {
-    createdAt: String,
-    email: String,
-    password: String,
-    role: String,
-    firstName: String,
-    lastName: String,
-    phoneNumber: String,
-    company: {
-      websiteUrl: { type: String },
-      companyName: { type: String },
-      companyEmail: { type: String },
-      address: {
-        country: { type: String },
-        city: { type: String },
-        street: { type: String },
-        postalCode: { type: String },
-      },
-    },
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
   },
-  code: String,
-  success: Boolean,
-  message: String,
+  reviews: [
+    {
+      comment: { type: String },
+      stars: { type: Number },
+      reviewerEmail: { type: String },
+      createdAt: { type: String },
+    },
+  ],
 });
 
 module.exports = model('Product', productSchema);

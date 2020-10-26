@@ -26,7 +26,6 @@ const getCurrentUser = async (req) => {
     if (token) {
       try {
         const user = await jwt.verify(token, process.env.SECRET);
-        // console.log(user);
         return user;
       } catch (e) {
         return null;
@@ -40,13 +39,20 @@ const getCurrentUser = async (req) => {
 const server = new ApolloServer({
   typeDefs: schema,
   resolvers,
-  context: async ({ req }) => {
-    const currentUser = await getCurrentUser(req);
-    return {
-      models,
-      currentUser,
-      secret: process.env.SECRET,
-    };
+  context: async ({ req, connection }) => {
+    if (connection) {
+      return {
+        models,
+      };
+    }
+    if (req) {
+      const currentUser = await getCurrentUser(req);
+      return {
+        models,
+        currentUser,
+        secret: process.env.SECRET,
+      };
+    }
   },
   engine: {
     reportSchema: true,
@@ -68,3 +74,5 @@ mongoose
   .catch((err) => {
     console.log(err);
   });
+
+mongoose.set('debug', true);
