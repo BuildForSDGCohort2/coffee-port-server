@@ -13,7 +13,7 @@ module.exports = {
   Mutation: {
     postProduct: combineResolvers(
       isAuthenitcated,
-      // isverified,
+      isverified,
       async (
         _,
         { product },
@@ -24,7 +24,6 @@ module.exports = {
             product,
           );
           if (!valid) {
-            console.log(productErrors);
             return {
               __typename: 'ProductInputError',
               message: 'Invalid product input',

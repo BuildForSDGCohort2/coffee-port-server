@@ -169,32 +169,34 @@ module.exports = {
       },
     ),
 
-   updateSeenStatus: combineResolvers(
+    updateSeenStatus: combineResolvers(
       isAuthenitcated,
-      async(
+      async (
         _,
-        {requestId, isProductOwner},
-        {models: { Request }, currentUser},
-      
+        { requestId, isProductOwner },
+        { models: { Request }, currentUser },
       ) => {
         try {
-            const request = await Request.findById(requestId);
-            if(request) {
-              if(isProductOwner) {
-                request.seenByProductOwner = currentUser.id;
-              } else {
-                request.seenByRequester = currentUser.id;
-              }
-              request.save();
-              return `${isProductOwner ? "Request seen as product owner" : "Request seen as buyyer"}`; 
+          const request = await Request.findById(requestId);
+          if (request) {
+            if (isProductOwner) {
+              request.seenByProductOwner = currentUser.id;
             } else {
-              return 'request does not exist';
+              request.seenByRequester = currentUser.id;
             }
-        }catch (err) {
+            request.save();
+            return `${
+              isProductOwner
+                ? 'Request seen as product owner'
+                : 'Request seen as buyyer'
+            }`;
+          } else {
+            return 'request does not exist';
+          }
+        } catch (err) {
           return `Unable to update seen status ${err}`;
         }
-      
-      } 
+      },
     ),
 
     deleteProductRequest: combineResolvers(
@@ -211,7 +213,7 @@ module.exports = {
           if (!request) {
             return 'requested product does not exist';
           }
-          if (request._doc.requestedBy.email !== currentUser.email) {   
+          if (request._doc.requestedBy.email !== currentUser.email) {
             return 'Not authenticated as owner of request';
           }
           await Request.deleteOne({ _id: requestId });
@@ -221,14 +223,14 @@ module.exports = {
           return 'Unknow error happened while deleting your request';
         }
       },
-    ), 
+    ),
 
     updateProductRequest: combineResolvers(
       isAuthenitcated,
       async (
         _,
         { requestId, requestStatus },
-        { models: { Request }, currentUser },
+        { models: { Request, Product }, currentUser },
       ) => {
         try {
           const request = await Request.findById(requestId);
@@ -251,6 +253,14 @@ module.exports = {
           request.requestStatus = requestStatus;
           request.createdAt = new Date().toISOString();
           await request.save();
+
+          if (request.requestStatus === 'ACCEPTED') {
+            const updateProduct = Product.findById(
+              request.requestedProduct.toString(),
+            );
+            updateProduct.purchased = true;
+            updateProduct.save();
+          }
 
           return {
             __typename: 'UpdateRequestSuccess',
